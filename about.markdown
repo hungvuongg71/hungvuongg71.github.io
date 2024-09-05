@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: window-default
 title: About
 permalink: /about/
 ---

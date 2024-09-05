@@ -1,0 +1,212 @@
+#window-explorer {
+    .window-body {
+        margin: 0 3pt;
+    }
+}
+
+.explorer-toolbar {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $line;
+    height: 18pt;
+
+    .toolbar-left-side {
+        ul {
+            display: flex;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                padding: 5pt 10pt 0 10pt;
+                height: 12pt;
+
+                &:hover {
+                    background-color: rgb(22, 96, 232);
+                    color: $white;
+                }
+            }
+        }
+    }
+
+    .toolbar-right-side {
+        width: 26pt;
+        padding: 2pt;
+        text-align: center;
+        background: $white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-left: 1px solid $line;
+
+        .explorer-window-logo {
+            width: 14pt;
+            height: 14pt;
+        }
+    }
+}
+
+.explorer-actionbar {
+    border-bottom: 1px solid $line;
+    height: 30pt;
+    display: flex;
+    align-items: center;
+
+    .action-separate-line {
+        width: 1px;
+        height: 28pt;
+        background-color: $line;
+    }
+
+    .action-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-right: 5pt;
+        padding-left: 5pt;
+        height: 90%;
+        border: 1px solid rgba(0, 0, 0, 0);
+        border-radius: 3pt;
+        margin-left: 3pt;
+        margin-right: 3pt;
+
+        &.disabled {
+            filter: grayscale(1);
+            opacity: 0.7;
+        }
+
+        &:hover {
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: rgba(0, 0, 0, 0.1) 0px -1px 1px inset;
+        }
+
+        &:first-child {
+            padding-left: 5pt;
+            padding-right: 0;
+        }
+
+        &.with-caret::after {
+            content: "";
+            display: block;
+            border-width: 3px 3px 0px;
+            border-color: rgb(0, 0, 0) transparent;
+            border-style: solid;
+            margin-left: 5pt;
+            margin-right: 5pt;
+        }
+
+        .action-label {
+            margin-left: 3pt;
+        }
+
+        .action-icon {
+            width: 24px;
+            height: 24px;
+        }
+    }
+}
+
+.explorer-address {
+    display: flex;
+    border-bottom: 1px solid $line;
+    box-shadow: rgb(176, 176, 176) 0px -2px 3px -1px inset;
+
+    .address-label {
+        opacity: 0.5;
+        padding: 0 3pt;
+    }
+
+    .explorer-addressbar {
+        flex: 1;
+    }
+
+    .go-button {
+        display: flex;
+        align-items: center;
+
+        .go-button-icon {
+            width: 14pt;
+            padding: 0 3pt;
+        }
+
+        label {
+            padding-right: 12pt;
+        }
+    }
+}
+
+.explorer-body {
+    width: 100%;
+    display: flex;
+
+    .body-left-side {
+        flex: 1;
+        padding: 8pt;
+        background: linear-gradient(rgb(116, 138, 255) 0%, rgb(64, 87, 211) 100%);
+
+        .info-group {
+            margin-bottom: 8pt;
+
+            .info-title {
+                display: flex;
+                justify-content: space-between;
+                background: linear-gradient(to right, rgb(240, 240, 255) 0px, rgb(240, 240, 255) 30%, rgb(168, 188, 255) 100%);
+                padding-left: 11px;
+                padding-right: 2px;
+                padding-top: 1pt;
+                padding-bottom: 1pt;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+
+                label {
+                    font-weight: bold;
+                    color: rgb(12, 50, 125);
+                    flex: 1 1 0%;
+
+                    &:hover {
+                        color: rgb(28, 104, 255);
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .info-list {
+                ul {
+                    padding: 5pt 10pt;
+                    margin: 0;
+                    list-style-type: none;
+                    background: linear-gradient(to right, rgb(180, 200, 251) 0%, rgb(164, 185, 251) 50%, rgb(180, 200, 251) 100%) rgba(198, 211, 255, 0.87);
+
+                    li {
+                        a {
+                            display: flex;
+                            align-items: center;
+                            margin-bottom: 2pt;
+                            color: rgb(12, 50, 125);
+                            text-decoration: none;
+
+                            &:hover {
+                                cursor: pointer;
+                                color: rgb(43, 114, 255);
+                                text-decoration: underline;
+                            }
+
+                            span {}
+
+                            img {
+                                width: 10pt;
+                                height: 10pt;
+                                margin-right: 4pt;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .body-right-side {
+        flex: 3;
+        background-color: $white;
+    }
+}

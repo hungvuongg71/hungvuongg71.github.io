@@ -1,0 +1,12 @@
+- image: /assets/images/gnome-fs-client.png
+  label: My Computer
+  content-url: /explorer
+  id: window-explorer
+  size:
+    height: 600
+    width: 800
+
+# - image: /assets/images/wab.exe_14_IDI_ICON_ABOOK-5.png
+#   label: My Posts
+#   content-url: /explorer
+#   id: window-resume

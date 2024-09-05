@@ -1,0 +1,49 @@
+{% assign back_arrow = site.data.base64["toolbar_back_arrow"] %}
+{% assign forward_arrow = site.data.base64["toolbar_forward_arrow"] %}
+{% assign folder_up = site.data.base64["toolbar_folder_up"] %}
+{% assign search = site.data.base64["toolbar_magnify"] %}
+{% assign folders = site.data.base64["toolbar_folders"] %}
+{% assign views = site.data.base64["toolbar_views"] %}
+
+<div class="explorer-actionbar">
+    <!-- Back Button -->
+    <div class="action-item with-caret disabled">
+        <img src="{{back_arrow}}" title="back-button" class="action-icon">
+        <label class="action-label">Back</label>
+    </div>
+
+    <!-- Forward Button -->
+    <div class="action-item with-caret disabled">
+        <img src="{{forward_arrow}}" title="forward-button" class="action-icon">
+    </div>
+
+    <!-- Forward Button -->
+    <div class="action-item">
+        <img src="{{folder_up}}" title="folder-up" class="action-icon">
+    </div>
+
+    <!-- Separate line -->
+    <div class="action-separate-line">
+    </div>
+
+    <!-- Search Button -->
+    <div class="action-item">
+        <img src="{{search}}" title="search" class="action-icon">
+        <label class="action-label">Search</label>
+    </div>
+
+    <!-- Folders Button -->
+    <div class="action-item">
+        <img src="{{folders}}" title="search" class="action-icon">
+        <label class="action-label">Folders</label>
+    </div>
+
+    <!-- Separate line -->
+    <div class="action-separate-line">
+    </div>
+
+    <!-- View Button -->
+    <div class="action-item with-caret">
+        <img src="{{views}}" title="views" class="action-icon">
+    </div>
+</div>

@@ -1,0 +1,80 @@
+@import "colors";
+@import "window-explorer";
+
+body {
+    background-image: url('/assets/images/Bliss.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.window {
+    position: absolute;
+    // background: linear-gradient(to right, rgb(237, 237, 229) 0%, rgb(237, 232, 205) 100%);
+
+    box-shadow: inset -1px -1px $focus_out_window, inset 1px 1px $focus_out_window, inset -2px -2px $focus_out_window, inset 2px 2px $focus_out_window, inset -3px -3px $focus_out_window, inset 3px 3px $focus_out_window;
+
+    .title-bar {
+        opacity: 0.7;
+        border-color: $focus_out_window;
+    }
+
+    .title-bar-text {
+        display: flex;
+    }
+
+    .window-icon {
+        width: 12pt;
+        height: 12pt;
+        margin-right: 2pt;
+    }
+
+    &.window-show {
+        display: block;
+    }
+
+    &.window-hide {
+        display: none;
+    }
+
+    &:focus {
+        box-shadow: inset -1px -1px #00138c, inset 1px 1px #0831d9, inset -2px -2px #001ea0, inset 2px 2px #166aee, inset -3px -3px #003bda, inset 3px 3px #0855dd;
+
+        .title-bar {
+            opacity: 1;
+            border-top: 1px solid #0831d9;
+            border-left: 1px solid #0831d9;
+            border-right: 1px solid #001ea0;
+        }
+    }
+}
+
+.shortcut-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 48pt;
+    height: 48pt;
+
+    &:active,
+    &:focus {
+        .shortcut-icon {
+            opacity: 0.55;
+        }
+
+        .shortcut-label {
+            background-color: rgb(49, 106, 197);
+        }
+    }
+
+    .shortcut-icon {
+        width: 28pt;
+        height: 28pt;
+    }
+
+    .shortcut-label {
+        margin-top: 5px;
+        color: $white;
+        padding: 2px;
+    }
+}

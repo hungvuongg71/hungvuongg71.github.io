@@ -1,0 +1,10 @@
+<nav>
+    {% for shortcut in site.data.shortcuts %}
+    {% assign i = forloop.index0 %}
+    <div class="shortcut-container" tabindex="{{i}}"
+        ondblclick="show_window_panel('{{shortcut.id}}', '{{shortcut.content-url}}')">
+        <img src="{{shortcut.image}}" title="{{shortcut.label}}" class="shortcut-icon">
+        <label class="shortcut-label">{{shortcut.label}}</label>
+    </div>
+    {% endfor %}
+</nav>
