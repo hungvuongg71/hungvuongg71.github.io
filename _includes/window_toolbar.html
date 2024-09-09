@@ -1,0 +1,19 @@
+<section class="window-toolbar">
+  <nav class="nav-toolbar">
+    <div class="nav-left">
+      {%- assign default_paths = site.pages | map: "path" -%}
+      {%- assign page_paths = site.header_pages | default: default_paths -%}
+      {%- for path in page_paths -%}
+      {%- assign my_page = site.pages | where: "path", path | first -%}
+      {%- if my_page.title -%}
+      <a href="{{ my_page.url | relative_url }}" class="nav-item">
+        <img src="{{ my_page.icon }}" title="{{ my_page.title | escape }}" />
+        <span>{{ my_page.title | escape }}</span>
+      </a>
+      {%- endif -%}
+      {%- endfor -%}
+    </div>
+    <div class="nav-right">
+    </div>
+  </nav>
+</section>
