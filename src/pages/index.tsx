@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Link, type HeadFC, type PageProps } from 'gatsby'
 import Layout from '../components/layout'
 import Card from '../components/card/card'
-import axios from 'axios'
 import { UxComicService } from '../services/uxcomic-service'
+import { ErrorResponse } from '../helpers/response-helper'
 
 interface IIndexPageProps extends PageProps {
   pageTitle: string;
@@ -18,8 +18,16 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = ({ data })
   const [categories, setCategories] = useState<Category[]>([])
 
   useEffect(() => {
-    UxComicService.getCategories().then(data => setCategories(data))
+    try {
+      UxComicService.getCategories().then(data => setCategories(data))
+    } catch (error: any) {
+      alert(error.message)
+    }
   }, [])
+
+  const handleGoToSubCategories = (event: React.MouseEvent<HTMLDivElement>) => {
+    console.log(event.currentTarget.id)
+  }
 
   return (
     <Layout pageTitle="Home Page">
@@ -27,7 +35,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = ({ data })
       <Link to="/about">Go to About Me</Link>
       <div className="grid gap-3 grid-cols-3">
         {categories && categories?.map(category =>
-          <Card key={category.id}>
+          <Card key={category.id} id={category.id} onClick={handleGoToSubCategories}>
             {category.title}
           </Card>
         )}
