@@ -1,46 +1,76 @@
 import React, { useState, useEffect } from 'react'
 import { Link, type HeadFC, type PageProps } from 'gatsby'
 import Layout from '../components/layout'
-import Card from '../components/card/card'
-import { UxComicService } from '../services/uxcomic-service'
-import { ErrorResponse } from '../helpers/response-helper'
+import { Category, Tag, UxComicService } from '../services/uxcomic-service'
+import { UxComicCard, UxComicDialog } from '../components/common'
+import { Button } from '@headlessui/react'
 
 interface IIndexPageProps extends PageProps {
-  pageTitle: string;
+  pageTitle: string
 }
 
-type Category = {
-  id: string;
-  title: string;
+interface TagList {
+  id: string
+  tags: Tag[]
 }
 
-const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = ({ data }) => {
+const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   const [categories, setCategories] = useState<Category[]>([])
+  const [openDialog, setOpenDialog] = useState<boolean>(false)
+  const [tagList, setTagList] = useState<TagList[]>([])
+  const [tags, setTags] = useState<Tag[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     try {
-      UxComicService.getCategories().then(data => setCategories(data))
+      setLoading(true)
+      UxComicService.getCategories().then(async (data) => {
+        setCategories(data)
+        let tmpTagList: TagList[] = []
+        for (let i = 0; i < data.length; i++) {
+          const item = data[i]
+          const tags = await UxComicService.getCategoryTags(item.id)
+          tmpTagList.push({ id: item.id, tags: tags })
+        }
+        setTagList(tmpTagList)
+        setLoading(false)
+      })
     } catch (error: any) {
       alert(error.message)
     }
   }, [])
 
-  const handleGoToSubCategories = (event: React.MouseEvent<HTMLDivElement>) => {
-    console.log(event.currentTarget.id)
+  const handleGoToSubCategories = async (
+    event: React.MouseEvent<HTMLDivElement>
+  ) => {
+    const tmpTags =
+      tagList.find((item) => item.id === event.currentTarget.id)?.tags || []
+    setTags(tmpTags)
+    setOpenDialog(true)
   }
 
   return (
     <Layout pageTitle="Home Page">
       <p>I'm making this by following the Gatsby Tutorial.</p>
       <Link to="/about">Go to About Me</Link>
+      {loading && <p>Loading...</p>}
       <div className="grid gap-3 grid-cols-3">
-        {categories && categories?.map(category =>
-          <Card key={category.id} id={category.id} onClick={handleGoToSubCategories}>
+        {categories?.map((category) => (
+          <UxComicCard
+            key={category.id}
+            id={category.id}
+            onClick={handleGoToSubCategories}
+          >
+            <img src={category.iconUrl} alt={category.title} />
             {category.title}
-          </Card>
-        )}
-
+          </UxComicCard>
+        ))}
       </div>
+      <UxComicDialog open={openDialog} setOpen={setOpenDialog}>
+        {tags.map((tag) => (
+          <Button key={tag.id}>{tag.name}</Button>
+        ))}
+      </UxComicDialog>
     </Layout>
   )
 }

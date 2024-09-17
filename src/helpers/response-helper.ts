@@ -1,8 +1,6 @@
 type ErrorResponse = {
-    status: string;
-    message: string;
+  status: string
+  message: string
 }
 
-export {
-    ErrorResponse
-}
+export { ErrorResponse }

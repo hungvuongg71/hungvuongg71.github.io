@@ -1,3 +1,3 @@
 export const MessageConstant = {
-    FETCH_ERROR: 'Please try again'
+  FETCH_ERROR: 'Please try again',
 }
