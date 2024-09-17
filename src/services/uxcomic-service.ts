@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export const UxComicService = {
     getCategories: async () => {
-        const { data } = await axios.get('/api/uxcomic/categories')
+        const { data } = await axios.get('/.netlify/functions/categories')
         return data
     }
 }
