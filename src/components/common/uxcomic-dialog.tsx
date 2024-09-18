@@ -1,12 +1,5 @@
-import { PageProps } from 'gatsby'
 import * as React from 'react'
-import {
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  Radio,
-  RadioGroup,
-} from '@headlessui/react'
+import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
 interface IDialogProps {

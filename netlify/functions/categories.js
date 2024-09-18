@@ -26,13 +26,11 @@ exports.handler = async function (event, context) {
 
     const data = categoriesResponse.results
       .filter((item) => item.properties.Publish?.checkbox)
-      .map((item) => {
-        return {
-          id: item.id,
-          title: item.properties?.Name?.title[0].plain_text,
-          iconUrl: item.icon?.file?.url,
-        }
-      })
+      .map((item) => ({
+        id: item.id,
+        title: item.properties?.Name?.title[0].plain_text,
+        iconUrl: item.icon?.file?.url,
+      }))
 
     return successResponse(data)
   } catch (error) {

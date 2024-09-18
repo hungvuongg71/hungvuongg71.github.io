@@ -9,6 +9,12 @@ export interface Category {
 export interface Tag {
   id: string
   name: string
+  databaseId: string
+}
+
+export interface Post {
+  id: string
+  title: string
 }
 
 export const UxComicService = {
@@ -24,6 +30,16 @@ export const UxComicService = {
     try {
       const { data } = await axios.get(
         `/.netlify/functions/category-tags?id=${id}`
+      )
+      return data.data
+    } catch (error) {
+      throw error
+    }
+  },
+  async getPosts(databaseId: string, tagName: string): Promise<Post[]> {
+    try {
+      const { data } = await axios.get(
+        `/.netlify/functions/posts?databaseId=${databaseId}&tagName=${tagName}`
       )
       return data.data
     } catch (error) {

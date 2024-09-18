@@ -16,7 +16,7 @@ exports.handler = async function (event, context) {
           (block) => block.type == 'child_database'
         )
       ] || null
-    const subCategoryResponse = await notion.databases.query({
+    const queryResponse = await notion.databases.query({
       database_id: database.id,
       sorts: [
         {
@@ -25,11 +25,12 @@ exports.handler = async function (event, context) {
         },
       ],
     })
-    const categoryTags = subCategoryResponse.results
+    const categoryTags = queryResponse.results
       .map((item) => {
         return {
           id: item.properties?.Tag?.select?.id,
           name: item.properties?.Tag?.select?.name,
+          databaseId: database.id,
         }
       })
       .filter((item) => item?.id !== undefined)

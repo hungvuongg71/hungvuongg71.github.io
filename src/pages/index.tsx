@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Link, type HeadFC, type PageProps } from 'gatsby'
 import Layout from '../components/layout'
-import { Category, Tag, UxComicService } from '../services/uxcomic-service'
-import { UxComicCard, UxComicDialog } from '../components/common'
-import { Button } from '@headlessui/react'
+import {
+  Category,
+  Post,
+  Tag,
+  UxComicService,
+} from '../services/uxcomic-service'
+import { UxComicButton, UxComicCard, UxComicDialog } from '../components/common'
+import TagsSection from '../components/tags-section'
 
 interface IIndexPageProps extends PageProps {
   pageTitle: string
@@ -20,6 +25,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   const [tagList, setTagList] = useState<TagList[]>([])
   const [tags, setTags] = useState<Tag[]>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const [posts, setPosts] = useState<Post[]>([])
 
   useEffect(() => {
     try {
@@ -40,13 +46,29 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (!tags || !openDialog) return
+    const { databaseId, name } = tags[0]
+    UxComicService.getPosts(databaseId, name).then((data) => setPosts(data))
+  }, [openDialog])
+
   const handleGoToSubCategories = async (
     event: React.MouseEvent<HTMLDivElement>
   ) => {
+    if (loading) return
     const tmpTags =
       tagList.find((item) => item.id === event.currentTarget.id)?.tags || []
     setTags(tmpTags)
     setOpenDialog(true)
+  }
+
+  const handleLoadPostsByCategory = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    const tag = tags.filter((tag) => tag.id === event.currentTarget.id)[0]
+    if (!tag) alert('invalid tag')
+    const { databaseId, name } = tag
+    UxComicService.getPosts(databaseId, name).then((data) => setPosts(data))
   }
 
   return (
@@ -67,9 +89,17 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
         ))}
       </div>
       <UxComicDialog open={openDialog} setOpen={setOpenDialog}>
-        {tags.map((tag) => (
-          <Button key={tag.id}>{tag.name}</Button>
-        ))}
+        <>
+          <TagsSection
+            tags={tags}
+            onButtonClick={handleLoadPostsByCategory}
+          ></TagsSection>
+          <ul>
+            {posts.map((post) => (
+              <li key={post.id}>{post.title}</li>
+            ))}
+          </ul>
+        </>
       </UxComicDialog>
     </Layout>
   )
