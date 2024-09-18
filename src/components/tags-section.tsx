@@ -13,7 +13,7 @@ const TagsSection: React.FC<React.PropsWithChildren<ITagsSectionProps>> = ({
   children,
 }) => {
   return (
-    <div className="flex">
+    <div className="flex flex-flex-nowrap mb-2">
       {tags.map((tag) => (
         <UxComicButton
           key={tag.id}

@@ -7,8 +7,9 @@ import {
   Tag,
   UxComicService,
 } from '../services/uxcomic-service'
-import { UxComicButton, UxComicCard, UxComicDialog } from '../components/common'
+import { UxComicCard, UxComicDialog } from '../components/common'
 import TagsSection from '../components/tags-section'
+import PostsSection from '../components/posts-section'
 
 interface IIndexPageProps extends PageProps {
   pageTitle: string
@@ -26,6 +27,8 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   const [tags, setTags] = useState<Tag[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [posts, setPosts] = useState<Post[]>([])
+  const [loadingPosts, setLoadingPosts] = useState<boolean>(false)
+  const [selectedTag, setSelectedTag] = useState<Tag>()
 
   useEffect(() => {
     try {
@@ -48,9 +51,19 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
 
   useEffect(() => {
     if (!tags || !openDialog) return
-    const { databaseId, name } = tags[0]
-    UxComicService.getPosts(databaseId, name).then((data) => setPosts(data))
+    loadPost(tags[0])
   }, [openDialog])
+
+  const loadPost = (tag: Tag) => {
+    if (selectedTag?.id === tag.id) return
+    setLoadingPosts(true)
+    setSelectedTag(tag)
+    const { databaseId, name } = tag
+    UxComicService.getPosts(databaseId, name).then((data) => {
+      setPosts(data)
+      setLoadingPosts(false)
+    })
+  }
 
   const handleGoToSubCategories = async (
     event: React.MouseEvent<HTMLDivElement>
@@ -65,10 +78,10 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   const handleLoadPostsByCategory = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
+    if (loadingPosts) return
     const tag = tags.filter((tag) => tag.id === event.currentTarget.id)[0]
     if (!tag) alert('invalid tag')
-    const { databaseId, name } = tag
-    UxComicService.getPosts(databaseId, name).then((data) => setPosts(data))
+    loadPost(tag)
   }
 
   return (
@@ -83,7 +96,9 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
             id={category.id}
             onClick={handleGoToSubCategories}
           >
-            <img src={category.iconUrl} alt={category.title} />
+            {category.iconUrl && (
+              <img src={category.iconUrl} alt={category.title} />
+            )}
             {category.title}
           </UxComicCard>
         ))}
@@ -94,11 +109,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
             tags={tags}
             onButtonClick={handleLoadPostsByCategory}
           ></TagsSection>
-          <ul>
-            {posts.map((post) => (
-              <li key={post.id}>{post.title}</li>
-            ))}
-          </ul>
+          <PostsSection posts={posts} loading={loadingPosts}></PostsSection>
         </>
       </UxComicDialog>
     </Layout>

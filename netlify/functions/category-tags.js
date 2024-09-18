@@ -41,7 +41,7 @@ exports.handler = async function (event, context) {
     return successResponse(categoryTags)
   } catch (error) {
     console.error('Notion API Error:', error.message)
-    console.log('Context info:', context)
+    console.log('Context info:', JSON.stringify(context))
     return errorResponse()
   }
 }

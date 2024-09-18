@@ -11,21 +11,23 @@ exports.handler = async function (event, context) {
     const { databaseId, tagName } = event.queryStringParameters
     if (!databaseId || !tagName)
       return badRequestResponse('invalid database id or tag name')
-    // const blockChildren = await notion.blocks.children.list({ block_id: id })
-    // const database =
-    //   blockChildren.results[
-    //     blockChildren.results?.findIndex(
-    //       (block) => block.type == 'child_database'
-    //     )
-    //   ] || null
-    // if (!database) return badRequestResponse('invalid fetch data')
     const queryResponse = await notion.databases.query({
       database_id: databaseId,
       filter: {
-        property: 'Tag',
-        select: {
-          equals: tagName,
-        },
+        and: [
+          {
+            property: 'Publish',
+            checkbox: {
+              equals: true,
+            },
+          },
+          {
+            property: 'Tag',
+            select: {
+              equals: tagName,
+            },
+          },
+        ],
       },
       sorts: [
         {
@@ -41,7 +43,7 @@ exports.handler = async function (event, context) {
     return successResponse(posts)
   } catch (error) {
     console.error('Notion API Error:', error.message)
-    console.log('Context info:', context)
+    console.log('Context info:', JSON.stringify(context))
     return errorResponse()
   }
 }
