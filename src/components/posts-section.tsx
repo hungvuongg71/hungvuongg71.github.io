@@ -1,25 +1,34 @@
-import React, { useState, JSX } from 'react'
+import React, { useState, JSX, useEffect } from 'react'
 import { Post, UxComicService } from '../services/uxcomic-service'
-import { UxComicCard, UxComicDialog } from './common'
+import { UxComicCard, UxComicDialog, UxComicFlashCard } from './common'
 import { renderContent } from '../helpers/content-helper'
+import { ContentList } from '../pages'
 
 interface IPostsSectionProps {
   posts: Post[]
+  contentList: ContentList[]
   loading: boolean
 }
 
 const PostsSection: React.FC<React.PropsWithChildren<IPostsSectionProps>> = ({
   posts,
+  contentList,
   loading = false,
   children,
 }) => {
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [contentElements, setContentElements] = useState<JSX.Element[]>([])
+  const [isFullScreen, setIsFullScreen] = useState(false)
+
+  useEffect(() => {
+    if (loading) return
+    console.log(contentList)
+  }, [loading])
 
   const handleGoToContent = async (event: React.MouseEvent<HTMLDivElement>) => {
-    const contentResults = await UxComicService.getContent(
-      event.currentTarget.id
-    )
+    const contentResults =
+      contentList.find((item) => item.id === event.currentTarget.id)
+        ?.contents || []
     const tmpContentElement: JSX.Element[] = []
     contentResults.forEach((content) => {
       const tmp = renderContent(content)
@@ -29,24 +38,24 @@ const PostsSection: React.FC<React.PropsWithChildren<IPostsSectionProps>> = ({
     setOpenDialog(true)
   }
 
+  const handleFullScreen = () => {
+    setIsFullScreen(!isFullScreen)
+  }
+
   return (
-    <div className="flex">
+    <div className="flex items-center justify-center h-full">
       {!loading && (
         <>
-          <div className="grid gap-3 grid-cols-3">
-            {posts.map((post) => (
-              <UxComicCard
-                key={post.id}
-                id={post.id}
-                onClick={handleGoToContent}
-              >
-                {post.title}
-              </UxComicCard>
-            ))}
-          </div>
-          <UxComicDialog open={openDialog} setOpen={setOpenDialog}>
+          {posts.map((post) => (
+            <UxComicFlashCard
+              key={post.id}
+              id={post.id}
+              // onClick={handleGoToContent}
+            ></UxComicFlashCard>
+          ))}
+          {/* <UxComicDialog open={openDialog} setOpen={setOpenDialog}>
             {contentElements.map((element) => element)}
-          </UxComicDialog>
+          </UxComicDialog> */}
         </>
       )}
       {loading && <p>Loading...</p>}

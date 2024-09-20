@@ -3,6 +3,7 @@ import { Link, type HeadFC, type PageProps } from 'gatsby'
 import Layout from '../components/layout'
 import {
   Category,
+  Content,
   Post,
   Tag,
   UxComicService,
@@ -20,6 +21,11 @@ interface TagList {
   tags: Tag[]
 }
 
+export interface ContentList {
+  id: string
+  contents: Content[]
+}
+
 const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   const [categories, setCategories] = useState<Category[]>([])
   const [openDialog, setOpenDialog] = useState<boolean>(false)
@@ -29,6 +35,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   const [posts, setPosts] = useState<Post[]>([])
   const [loadingPosts, setLoadingPosts] = useState<boolean>(false)
   const [selectedTag, setSelectedTag] = useState<Tag>()
+  const [contentList, setContentList] = useState<ContentList[]>([])
 
   useEffect(() => {
     try {
@@ -59,10 +66,20 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     setLoadingPosts(true)
     setSelectedTag(tag)
     const { databaseId, name } = tag
-    UxComicService.getPosts(databaseId, name).then((data) => {
+    UxComicService.getPosts(databaseId, name).then(async (data) => {
       setPosts(data)
-      setLoadingPosts(false)
+      loadContentList(data).then(() => setLoadingPosts(false))
     })
+  }
+
+  const loadContentList = async (postData: Post[]) => {
+    const tmpContentList: ContentList[] = []
+    for (let i = 0; i < postData.length; i++) {
+      const post = postData[i]
+      const content = await UxComicService.getContent(post.id)
+      tmpContentList.push({ id: post.id, contents: content })
+    }
+    setContentList(tmpContentList)
   }
 
   const handleGoToSubCategories = async (
@@ -86,7 +103,6 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
 
   return (
     <Layout pageTitle="Home Page">
-      <p>I'm making this by following the Gatsby Tutorial.</p>
       <Link to="/about">Go to About Me</Link>
       {loading && <p>Loading...</p>}
       <div className="grid gap-3 grid-cols-3">
@@ -109,7 +125,11 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
             tags={tags}
             onButtonClick={handleLoadPostsByCategory}
           ></TagsSection>
-          <PostsSection posts={posts} loading={loadingPosts}></PostsSection>
+          <PostsSection
+            posts={posts}
+            contentList={contentList}
+            loading={loadingPosts}
+          ></PostsSection>
         </>
       </UxComicDialog>
     </Layout>

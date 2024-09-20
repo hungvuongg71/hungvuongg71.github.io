@@ -1,20 +1,26 @@
 import React, { JSX } from 'react'
 import { Content } from '../services/uxcomic-service'
-import { ChevronRightIcon } from '@heroicons/react/24/outline'
+import {
+  NotionBulletedListItem,
+  NotionImage,
+  NotionParagraph,
+} from '../components/notion-elements'
 
 export const renderContent = (content: Content): JSX.Element | null => {
   switch (content.type) {
     case 'bulleted_list_item':
       return (
-        <p key={content.id} className="flex">
-          <ChevronRightIcon className="text-blue-500 basis-1" />
-          <span className="flex-1">{content.data}</span>
-        </p>
+        <NotionBulletedListItem
+          key={content.id}
+          content={content}
+        ></NotionBulletedListItem>
       )
     case 'image':
-      return <img key={content.id} src={content.data}></img>
+      return <NotionImage key={content.id} content={content}></NotionImage>
     case 'paragraph':
-      return <p key={content.id}>{content.data}</p>
+      return (
+        <NotionParagraph key={content.id} content={content}></NotionParagraph>
+      )
   }
   return null
 }
