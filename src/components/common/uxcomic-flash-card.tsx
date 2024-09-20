@@ -1,5 +1,5 @@
-import { animated, to as interpolate } from '@react-spring/web'
-import React from 'react'
+import { animated, to as interpolate, useSpring } from '@react-spring/web'
+import React, { useState } from 'react'
 import { SpringValue } from '@react-spring/core/dist/react-spring_core.modern.js'
 import { ReactDOMAttributes } from '@use-gesture/react/dist/declarations/src/types'
 
@@ -29,8 +29,31 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
   onClick,
   children,
 }) => {
+  const [open, set] = useState(false)
+
+  const { top, height } = useSpring({
+    to: {
+      height: open ? `${window.innerHeight}px` : '400px',
+      top: open ? '0' : `${window?.innerHeight / 4}`,
+    },
+  })
+
+  const toggleZoom = (event: React.MouseEvent<HTMLDivElement>) => {
+    set(!open)
+  }
+
   return (
-    <animated.div className="deck" key={i} style={{ x, y }}>
+    <animated.div
+      className="deck"
+      key={i}
+      style={{
+        x,
+        y,
+        height: height,
+        top: top.to((value) => (value === '-1' ? 'auto' : `${value}px`)),
+        backgroundColor: 'lightgreen',
+      }}
+    >
       <animated.div
         {...bind(i)}
         style={{
@@ -38,6 +61,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
           backgroundImage: `url(${imageUrl})`,
           touchAction: 'pan-y',
         }}
+        onClick={toggleZoom}
       >
         {children}
       </animated.div>
