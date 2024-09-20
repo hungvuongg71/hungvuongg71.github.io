@@ -66,10 +66,14 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     setLoadingPosts(true)
     setSelectedTag(tag)
     const { databaseId, name } = tag
-    UxComicService.getPosts(databaseId, name).then(async (data) => {
-      setPosts(data)
-      loadContentList(data).then(() => setLoadingPosts(false))
-    })
+    UxComicService.getPosts(databaseId, name)
+      .then(async (data) => {
+        // TESTING COVER
+        data.forEach((item) => (item.cover = 'https://placehold.co/600x400'))
+        setPosts(data)
+        return data
+      })
+      .then((data) => loadContentList(data).then(() => setLoadingPosts(false)))
   }
 
   const loadContentList = async (postData: Post[]) => {
@@ -104,32 +108,36 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   return (
     <Layout pageTitle="Home Page">
       <Link to="/about">Go to About Me</Link>
+      {!loading && (
+        <div className="grid gap-3 grid-cols-3">
+          {categories?.map((category) => (
+            <UxComicCard
+              key={category.id}
+              id={category.id}
+              onClick={handleGoToSubCategories}
+            >
+              {category.iconUrl && (
+                <img src={category.iconUrl} alt={category.title} />
+              )}
+              {category.title}
+            </UxComicCard>
+          ))}
+        </div>
+      )}
       {loading && <p>Loading...</p>}
-      <div className="grid gap-3 grid-cols-3">
-        {categories?.map((category) => (
-          <UxComicCard
-            key={category.id}
-            id={category.id}
-            onClick={handleGoToSubCategories}
-          >
-            {category.iconUrl && (
-              <img src={category.iconUrl} alt={category.title} />
-            )}
-            {category.title}
-          </UxComicCard>
-        ))}
-      </div>
       <UxComicDialog open={openDialog} setOpen={setOpenDialog}>
         <>
           <TagsSection
             tags={tags}
             onButtonClick={handleLoadPostsByCategory}
           ></TagsSection>
-          <PostsSection
-            posts={posts}
-            contentList={contentList}
-            loading={loadingPosts}
-          ></PostsSection>
+          {!loadingPosts && (
+            <PostsSection
+              posts={posts}
+              contentList={contentList}
+            ></PostsSection>
+          )}
+          {loadingPosts && <p>Loading...</p>}
         </>
       </UxComicDialog>
     </Layout>
