@@ -100,7 +100,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
       .then(async (data) => {
         // TESTING COVER
         data.forEach((item) => {
-          item.cover = 'https://placehold.co/600x400'
+          item.cover = 'https://placehold.co/1200x630.png'
           item.tagId = tag.id
           item.categoryId = selectedCategory?.id || ''
         })
