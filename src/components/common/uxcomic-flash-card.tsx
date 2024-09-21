@@ -78,15 +78,14 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
         width: width,
         height: height,
         top: top.to((value) => (value === '-1' ? 'auto' : `${value}px`)),
-        backgroundColor: 'lightgreen',
       }}
     >
       <animated.div
         {...bind(i)}
         className="flex flex-col"
         style={{
-          transform: open ? 'none' : interpolate([rot, scale], trans),
-          touchAction: open ? 'none' : 'pan-y',
+          transform: interpolate([rot, scale], trans),
+          touchAction: 'pan-y',
           width: open ? `${window.innerWidth}px` : undefined,
           height: open ? `${window.innerHeight}px` : undefined,
           maxWidth: open ? '100%' : undefined,
