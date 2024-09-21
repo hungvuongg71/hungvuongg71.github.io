@@ -86,6 +86,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     const tagId = new URLSearchParams(location.search).get('tagId')
     if (!tagId) return
     const tag = tags.find((tag) => tag.id === tagId)
+    console.log(tags)
     if (!tag) return
     loadPost(tag)
   }, [location, tags])
@@ -126,6 +127,9 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     const tmpTags =
       tagList.find((item) => item.id === event.currentTarget.id)?.tags || []
     setTags(tmpTags)
+    setSelectedCategory(
+      categories.find((category) => category.id === event.currentTarget.id)
+    )
   }
 
   const handleLoadPostsByCategory = (
