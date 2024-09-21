@@ -5,6 +5,7 @@ import { useDrag } from '@use-gesture/react'
 import { Post } from '../services/uxcomic-service'
 
 export const useUxComicFlashCard = (posts: Post[]) => {
+  const [isDraggingAllowed, setIsDraggingAllowed] = useState<boolean>(true)
   const [gone] = useState(() => new Set()) // The set flags all the cards that are flicked out
   // Create a bunch of springs using the helpers above
   const [props, api] = useSprings(posts.length, (i) => ({
@@ -13,6 +14,7 @@ export const useUxComicFlashCard = (posts: Post[]) => {
   }))
   const bind = useDrag(
     ({ args: [index], down, movement: [mx], direction: [xDir], velocity }) => {
+      if (!isDraggingAllowed) return
       const trigger = velocity[0] > 0.2 // If you flick hard enough it should trigger the card to fly out
       const dir = xDir < 0 ? -1 : 1 // Direction should either point left or right
       if (!down && trigger) gone.add(index) // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
@@ -38,9 +40,13 @@ export const useUxComicFlashCard = (posts: Post[]) => {
     }
   )
 
+  const enableDrag = (isEnabled: boolean = true) =>
+    setIsDraggingAllowed(isEnabled)
+
   return {
     props,
     bind,
     trans,
+    enableDrag,
   }
 }
