@@ -68,6 +68,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
       y: open ? '0px' : '30px',
       opacity: open ? 1 : 0,
       padding: '12px',
+      width: `${window.innerWidth}px`,
       height: open ? '100%' : '0px',
       overflow: open ? 'visible' : 'hidden',
     },
