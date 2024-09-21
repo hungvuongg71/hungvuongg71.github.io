@@ -91,7 +91,8 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
           height: open ? `${window.innerHeight}px` : undefined,
           maxWidth: open ? '100%' : undefined,
           maxHeight: open ? '100%' : undefined,
-          overflow: open ? 'auto' : 'hidden',
+          overflowY: open ? 'auto' : 'hidden',
+          position: 'relative',
         }}
         onClick={toggleZoom}
       >
