@@ -111,7 +111,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
         .share({
           title: title,
           text: title,
-          url: `https://deploy-preview-2--hungvuongg71.netlify.app?postId=${id}&tagId=${tagId}&category=${categoryId}`, // URL của bài viết
+          url: `https://deploy-preview-2--hungvuongg71.netlify.app?postId=${id}&tagId=${tagId}&categoryId=${categoryId}`, // URL của bài viết
         })
         .then(() => console.log('Chia sẻ thành công!'))
         .catch((error) => console.error('Lỗi khi chia sẻ:', error))
