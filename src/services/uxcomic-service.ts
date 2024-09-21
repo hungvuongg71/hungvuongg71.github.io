@@ -16,6 +16,8 @@ export interface Post {
   id: string
   title: string
   cover: string
+  categoryId: string
+  tagId: string
 }
 
 export interface Content {

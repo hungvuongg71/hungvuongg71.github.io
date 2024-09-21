@@ -1,12 +1,15 @@
 import { animated, to as interpolate, useSpring } from '@react-spring/web'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SpringValue } from '@react-spring/core/dist/react-spring_core.modern.js'
 import { ReactDOMAttributes } from '@use-gesture/react/dist/declarations/src/types'
 import UxComicButton from './uxcomic-button'
 import { Helmet } from 'react-helmet'
+import { useLocation } from '@reach/router'
 
 interface IFlashCardProps {
   id?: string
+  tagId?: string
+  categoryId?: string
   i: number
   x: SpringValue<number>
   y: SpringValue<number>
@@ -22,6 +25,8 @@ interface IFlashCardProps {
 
 const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
   id,
+  tagId,
+  categoryId,
   i,
   x,
   y,
@@ -29,6 +34,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
   scale,
   imageUrl,
   title,
+
   trans,
   bind,
   onClick,
@@ -36,6 +42,8 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
   children,
 }) => {
   const [open, set] = useState(false)
+  const [isRotatedCard, setIsRotatedCard] = useState<boolean>(true)
+  const location = useLocation()
 
   const { top, width, height } = useSpring({
     to: {
@@ -75,12 +83,25 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
       height: open ? '100%' : '0px',
       overflow: open ? 'visible' : 'hidden',
     },
+    config: {
+      duration: 280,
+    },
+    delay: open ? 200 : 0,
+    immediate: open ? false : true,
   })
 
-  const toggleZoom = (event: React.MouseEvent<HTMLDivElement>) => {
-    set(!open)
+  useEffect(() => {
+    if (!location || !id) return
+    const postId = new URLSearchParams(location.search).get('postId')
+    if (postId !== id) return
+    toggleZoom(undefined)
+    setIsRotatedCard(false)
+  }, [location, id])
 
+  const toggleZoom = (event: React.MouseEvent<HTMLDivElement> | undefined) => {
+    set(!open)
     if (onEnableDrag) onEnableDrag(open)
+    if (!isRotatedCard) setIsRotatedCard(true)
   }
 
   const handleShareLink = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -90,7 +111,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
         .share({
           title: title,
           text: title,
-          url: `https://deploy-preview-2--hungvuongg71.netlify.app?postId=${id}`, // URL của bài viết
+          url: `https://deploy-preview-2--hungvuongg71.netlify.app?postId=${id}&tagId=${tagId}&category=${categoryId}`, // URL của bài viết
         })
         .then(() => console.log('Chia sẻ thành công!'))
         .catch((error) => console.error('Lỗi khi chia sẻ:', error))
@@ -136,7 +157,9 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
           {...bind(i)}
           className="flex flex-col"
           style={{
-            transform: interpolate([rot, scale], trans),
+            transform: !isRotatedCard
+              ? 'none'
+              : interpolate([rot, scale], trans),
             touchAction: 'pan-y',
             overflowY: open ? 'auto' : 'hidden',
             position: 'relative',
@@ -153,10 +176,10 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
             <h1 className="font-bold text-center">{title}</h1>
           </animated.div>
           <animated.div className="flex-grow" style={{ ...contentStyles }}>
-            {children}
             <UxComicButton id={id} onClick={handleShareLink}>
               Share
             </UxComicButton>
+            {children}
           </animated.div>
         </animated.div>
       </animated.div>

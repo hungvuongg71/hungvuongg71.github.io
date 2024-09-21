@@ -15,11 +15,7 @@ const UxComicCard: React.FC<React.PropsWithChildren<ICardProps>> = ({
   children,
 }) => {
   return (
-    <div
-      id={id}
-      onClick={onClick}
-      className="flex flex-col h-48 bg-neutral-200 p-2"
-    >
+    <div id={id} onClick={onClick} className="flex flex-col bg-neutral-200 p-2">
       {headerTitle && <div className="">Header</div>}
       <div className="grow">{children || 'No Content'}</div>
       {footerTitle && <div className="">Footer</div>}

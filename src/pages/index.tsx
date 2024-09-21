@@ -11,6 +11,7 @@ import {
 import { UxComicCard, UxComicDialog } from '../components/common'
 import TagsSection from '../components/tags-section'
 import PostsSection from '../components/posts-section'
+import { useLocation, useParams } from '@reach/router'
 
 interface IIndexPageProps extends PageProps {
   pageTitle: string
@@ -28,14 +29,16 @@ export interface ContentList {
 
 const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   const [categories, setCategories] = useState<Category[]>([])
-  const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [tagList, setTagList] = useState<TagList[]>([])
   const [tags, setTags] = useState<Tag[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [posts, setPosts] = useState<Post[]>([])
   const [loadingPosts, setLoadingPosts] = useState<boolean>(false)
   const [selectedTag, setSelectedTag] = useState<Tag>()
+  const [selectedCategory, setSelectedCategory] = useState<Category>()
   const [contentList, setContentList] = useState<ContentList[]>([])
+
+  const location = useLocation()
 
   useEffect(() => {
     try {
@@ -57,9 +60,35 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   }, [])
 
   useEffect(() => {
-    if (!tags || !openDialog) return
-    loadPost(tags[0])
-  }, [openDialog])
+    // console.log(categories, selectedCategory, tagList)
+    if (!categories.length || selectedCategory || !tagList.length) return
+    setSelectedCategory(categories[0])
+    if (selectedCategory === undefined) return
+    // const tmpTags =
+    //   tagList.find((item) => item.id === selectedCategory?.id)?.tags || []
+    // setTags(tmpTags)
+  }, [categories, selectedCategory, tagList])
+
+  useEffect(() => {
+    if (!location || !tagList.length) return
+    const categoryId = new URLSearchParams(location.search).get('categoryId')
+    if (!categoryId || loading) return
+    const tmpTags = tagList.find((item) => item.id === categoryId)?.tags || []
+    if (!tmpTags.length) {
+      alert('Not Found Tags')
+      return
+    }
+    setTags(tmpTags)
+  }, [location, tagList])
+
+  useEffect(() => {
+    if (!location || !tags.length) return
+    const tagId = new URLSearchParams(location.search).get('tagId')
+    if (!tagId) return
+    const tag = tags.find((tag) => tag.id === tagId)
+    if (!tag) return
+    loadPost(tag)
+  }, [location, tags])
 
   const loadPost = (tag: Tag) => {
     if (selectedTag?.id === tag.id) return
@@ -69,7 +98,11 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     UxComicService.getPosts(databaseId, name)
       .then(async (data) => {
         // TESTING COVER
-        data.forEach((item) => (item.cover = 'https://placehold.co/600x400'))
+        data.forEach((item) => {
+          item.cover = 'https://placehold.co/600x400'
+          item.tagId = tag.id
+          item.categoryId = selectedCategory?.id || ''
+        })
         setPosts(data)
         return data
       })
@@ -93,7 +126,6 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     const tmpTags =
       tagList.find((item) => item.id === event.currentTarget.id)?.tags || []
     setTags(tmpTags)
-    setOpenDialog(true)
   }
 
   const handleLoadPostsByCategory = (
@@ -109,7 +141,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     <Layout pageTitle="Home Page">
       <Link to="/about">Go to About Me</Link>
       {!loading && (
-        <div className="grid gap-3 grid-cols-3">
+        <div className="flex flex-nowrap">
           {categories?.map((category) => (
             <UxComicCard
               key={category.id}
@@ -125,21 +157,14 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
         </div>
       )}
       {loading && <p>Loading...</p>}
-      <UxComicDialog open={openDialog} setOpen={setOpenDialog}>
-        <>
-          <TagsSection
-            tags={tags}
-            onButtonClick={handleLoadPostsByCategory}
-          ></TagsSection>
-          {!loadingPosts && (
-            <PostsSection
-              posts={posts}
-              contentList={contentList}
-            ></PostsSection>
-          )}
-          {loadingPosts && <p>Loading...</p>}
-        </>
-      </UxComicDialog>
+      <TagsSection
+        tags={tags}
+        onButtonClick={handleLoadPostsByCategory}
+      ></TagsSection>
+      {!loadingPosts && (
+        <PostsSection posts={posts} contentList={contentList}></PostsSection>
+      )}
+      {loadingPosts && <p>Loading...</p>}
     </Layout>
   )
 }
