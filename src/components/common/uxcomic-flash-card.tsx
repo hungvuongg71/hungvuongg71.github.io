@@ -37,9 +37,18 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
 
   const { top, width, height } = useSpring({
     to: {
-      width: open ? `${window.innerHeight}px` : '250px',
+      width: open ? `${window.innerWidth}px` : '250px',
       height: open ? `${window.innerHeight}px` : '385px',
       top: open ? '0' : `${window?.innerHeight / 4}`,
+    },
+  })
+
+  const cardStyles = useSpring({
+    to: {
+      width: open ? `${window.innerWidth}px` : '250px',
+      height: open ? `${window.innerHeight}px` : '385px',
+      maxWidth: open ? '100%' : undefined,
+      maxHeight: open ? '100%' : undefined,
     },
   })
 
@@ -59,6 +68,8 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
       y: open ? '0px' : '30px',
       opacity: open ? 1 : 0,
       padding: '12px',
+      height: open ? '100%' : '0px',
+      overflow: open ? 'visible' : 'hidden',
     },
   })
 
@@ -86,12 +97,13 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
         style={{
           transform: interpolate([rot, scale], trans),
           touchAction: 'pan-y',
-          width: open ? `${window.innerWidth}px` : undefined,
-          height: open ? `${window.innerHeight}px` : undefined,
-          maxWidth: open ? '100%' : undefined,
-          maxHeight: open ? '100%' : undefined,
+          // width: open ? `${window.innerWidth}px` : undefined,
+          // height: open ? `${window.innerHeight}px` : undefined,
+          // maxWidth: open ? '100%' : undefined,
+          // maxHeight: open ? '100%' : undefined,
           overflowY: open ? 'auto' : 'hidden',
           position: 'relative',
+          ...cardStyles,
         }}
         onClick={toggleZoom}
       >
