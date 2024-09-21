@@ -36,6 +36,7 @@ const PostsSection: React.FC<React.PropsWithChildren<IPostsSectionProps>> = ({
       <>
         {props.map(({ x, y, rot, scale }, i) => (
           <UxComicFlashCard
+            id={posts[i].id}
             key={i}
             i={i}
             x={x}
