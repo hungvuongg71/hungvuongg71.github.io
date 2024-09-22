@@ -12,10 +12,18 @@ import { UxComicCard } from '../components/common'
 import TagsSection from '../components/tags-section'
 import PostsSection from '../components/posts-section'
 import { useLocation } from '@reach/router'
-import { env } from 'process'
+import { Helmet } from 'react-helmet'
 
 interface IIndexPageProps extends PageProps {
   pageTitle: string
+}
+
+interface ServerData {
+  title: string
+  imageUrl: string
+  postId: string
+  tagId: string
+  categoryId: string
 }
 
 interface TagList {
@@ -71,15 +79,9 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   // }, [categories, selectedCategory, tagList])
 
   useEffect(() => {
-    if (!location || !tagList.length) {
-      console.log('Not found location or tagList')
-      return
-    }
+    if (!location || !tagList.length) return
     const categoryId = new URLSearchParams(location.search).get('categoryId')
-    if (!categoryId || loading) {
-      console.log('Not found category id or loading')
-      return
-    }
+    if (!categoryId || loading) return
     const tmpTags = tagList.find((item) => item.id === categoryId)?.tags || []
     if (!tmpTags.length) {
       console.log('Not Found Tags')
@@ -89,18 +91,12 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   }, [location, tagList])
 
   useEffect(() => {
-    if (!location || !tags.length) {
-      console.log('Not found location or tags')
-      return
-    }
+    if (!location || !tags.length) return
     const tagId = new URLSearchParams(location.search).get('tagId')
-    if (!tagId) {
-      console.log('Not found tagId')
-      return
-    }
+    if (!tagId) return
     const tag = tags.find((tag) => tag.id === tagId)
     if (!tag) {
-      console.log('Tag:', tag)
+      console.log('Not found tag')
       return
     }
     loadPost(tag)
@@ -114,7 +110,9 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     UxComicService.getPosts(databaseId, name)
       .then(async (data) => {
         data.forEach((item) => {
-          item.cover = item?.cover || process.env.DEFAULT_THUMBNAIL || ''
+          // item.cover = item?.cover || process.env.DEFAULT_THUMBNAIL || ''
+          item.cover =
+            'https://searchengineland.com/wp-content/seloads/2016/01/smx-london-home-skyline-1200x630.png'
           item.tagId = tag.id
           item.categoryId = selectedCategory?.id || ''
         })
@@ -192,4 +190,30 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
 
 export default IndexPage
 
-export const Head: HeadFC = () => <title>Home Page</title>
+// export const Head: HeadFC = ({ serverData }) => {
+//   const { title, tagId, postId, imageUrl, categoryId } =
+//     serverData as ServerData
+
+//   return (
+//     <>
+//       <title>{title || 'Home Page'}</title>
+//       <meta property="og:title" content={title} />
+//       <meta property="og:description" content={title} />
+//       <meta property="og:image" content={imageUrl} />
+//       <meta property="og:type" content="article" />
+//       <meta
+//         property="og:url"
+//         content={`https://deploy-preview-2--hungvuongg71.netlify.app/?postId=${postId}&tagId=${tagId}&categoryId=${categoryId}&title=${title}&imageUrl=${imageUrl}`}
+//       />
+//     </>
+//   )
+// }
+
+// export const getServerData = (context: any) => {
+//   console.log(context)
+//   return {
+//     props: {
+//       ...context.query,
+//     },
+//   }
+// }

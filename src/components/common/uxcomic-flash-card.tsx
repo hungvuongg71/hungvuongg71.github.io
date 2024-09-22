@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { SpringValue } from '@react-spring/core/dist/react-spring_core.modern.js'
 import { ReactDOMAttributes } from '@use-gesture/react/dist/declarations/src/types'
 import UxComicButton from './uxcomic-button'
-import { Helmet } from 'react-helmet'
 import { useLocation } from '@reach/router'
 
 interface IFlashCardProps {
@@ -111,7 +110,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
         .share({
           title: title,
           text: title,
-          url: `https://deploy-preview-2--hungvuongg71.netlify.app?postId=${id}&tagId=${tagId}&categoryId=${categoryId}`, // URL của bài viết
+          url: `https://deploy-preview-2--hungvuongg71.netlify.app/post/${id}/`, // URL của bài viết
         })
         .then(() => console.log('Chia sẻ thành công!'))
         .catch((error) => console.error('Lỗi khi chia sẻ:', error))
@@ -122,26 +121,6 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
 
   return (
     <>
-      <Helmet>
-        <title>{title}</title>
-
-        {/* Open Graph metadata */}
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={title} />
-        <meta property="og:image" content={imageUrl} />
-        <meta property="og:type" content="article" />
-        <meta
-          property="og:url"
-          content={`${window.location.href}?postId=${id}`}
-        />
-
-        {/* Các thẻ khác nếu cần */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={title} />
-        <meta name="twitter:image" content={imageUrl} />
-      </Helmet>
-
       <animated.div
         className="deck"
         key={i}
