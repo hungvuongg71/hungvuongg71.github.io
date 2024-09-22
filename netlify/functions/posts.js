@@ -39,6 +39,7 @@ exports.handler = async function (event, context) {
     const posts = queryResponse.results.map((item) => ({
       id: item.id,
       title: item.properties?.Name?.title[0]?.plain_text,
+      cover: item.cover?.file?.url,
     }))
     return successResponse(posts)
   } catch (error) {

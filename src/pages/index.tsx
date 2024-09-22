@@ -8,10 +8,11 @@ import {
   Tag,
   UxComicService,
 } from '../services/uxcomic-service'
-import { UxComicCard, UxComicDialog } from '../components/common'
+import { UxComicCard } from '../components/common'
 import TagsSection from '../components/tags-section'
 import PostsSection from '../components/posts-section'
-import { useLocation, useParams } from '@reach/router'
+import { useLocation } from '@reach/router'
+import { env } from 'process'
 
 interface IIndexPageProps extends PageProps {
   pageTitle: string
@@ -59,35 +60,49 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     }
   }, [])
 
-  useEffect(() => {
-    // console.log(categories, selectedCategory, tagList)
-    if (!categories.length || selectedCategory || !tagList.length) return
-    setSelectedCategory(categories[0])
-    if (selectedCategory === undefined) return
-    // const tmpTags =
-    //   tagList.find((item) => item.id === selectedCategory?.id)?.tags || []
-    // setTags(tmpTags)
-  }, [categories, selectedCategory, tagList])
+  // useEffect(() => {
+  //   // console.log(categories, selectedCategory, tagList)
+  //   if (!categories.length || selectedCategory || !tagList.length) return
+  //   setSelectedCategory(categories[0])
+  //   if (selectedCategory === undefined) return
+  //   // const tmpTags =
+  //   //   tagList.find((item) => item.id === selectedCategory?.id)?.tags || []
+  //   // setTags(tmpTags)
+  // }, [categories, selectedCategory, tagList])
 
   useEffect(() => {
-    if (!location || !tagList.length) return
+    if (!location || !tagList.length) {
+      console.log('Not found location or tagList')
+      return
+    }
     const categoryId = new URLSearchParams(location.search).get('categoryId')
-    if (!categoryId || loading) return
+    if (!categoryId || loading) {
+      console.log('Not found category id or loading')
+      return
+    }
     const tmpTags = tagList.find((item) => item.id === categoryId)?.tags || []
     if (!tmpTags.length) {
-      alert('Not Found Tags')
+      console.log('Not Found Tags')
       return
     }
     setTags(tmpTags)
   }, [location, tagList])
 
   useEffect(() => {
-    if (!location || !tags.length) return
+    if (!location || !tags.length) {
+      console.log('Not found location or tags')
+      return
+    }
     const tagId = new URLSearchParams(location.search).get('tagId')
-    if (!tagId) return
+    if (!tagId) {
+      console.log('Not found tagId')
+      return
+    }
     const tag = tags.find((tag) => tag.id === tagId)
-    console.log(tags)
-    if (!tag) return
+    if (!tag) {
+      console.log('Tag:', tag)
+      return
+    }
     loadPost(tag)
   }, [location, tags])
 
@@ -98,9 +113,8 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     const { databaseId, name } = tag
     UxComicService.getPosts(databaseId, name)
       .then(async (data) => {
-        // TESTING COVER
         data.forEach((item) => {
-          item.cover = 'https://placehold.co/1200x630.png'
+          item.cover = item?.cover || process.env.DEFAULT_THUMBNAIL || ''
           item.tagId = tag.id
           item.categoryId = selectedCategory?.id || ''
         })
@@ -137,7 +151,10 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   ) => {
     if (loadingPosts) return
     const tag = tags.filter((tag) => tag.id === event.currentTarget.id)[0]
-    if (!tag) alert('invalid tag')
+    if (!tag) {
+      console.log('invalid tag')
+      return
+    }
     loadPost(tag)
   }
 

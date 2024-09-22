@@ -22,5 +22,5 @@ export const renderContent = (content: Content): JSX.Element | null => {
         <NotionParagraph key={content.id} content={content}></NotionParagraph>
       )
   }
-  return null
+  return <p>{content.data || 'No content'}</p>
 }

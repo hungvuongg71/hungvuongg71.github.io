@@ -31,6 +31,8 @@ const getDataValue = (block) => {
     case 'bulleted_list_item':
       data = block?.bulleted_list_item?.rich_text[0]?.plain_text
       break
+    case 'callout':
+      data = block?.callout?.rich_text[0]?.plain_text
   }
   return data
 }
