@@ -188,32 +188,24 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   )
 }
 
+export const Head: HeadFC = ({ location, params, data, pageContext }) => {
+  console.log(location, params, data, pageContext)
+  return (
+    <>
+      <title>UXComic</title>
+      <meta property="og:title" content="UXComic" />
+      <meta property="og:description" content="UXComic" />
+      <meta
+        property="og:image"
+        content="https://prod-files-secure.s3.us-west-2.amazonaws.com/bbbed9fd-0db9-45f7-8f82-bd0944c25a2d/df9019ef-3650-4c5e-8d06-815ff268d5d8/Lets_your_work_speak_themselves_be_like.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240923%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20240923T093734Z&X-Amz-Expires=3600&X-Amz-Signature=d0687184912fa7b743510e718e7b60034c8c9a45d46aa7375de8f47d783d3ad0&X-Amz-SignedHeaders=host&x-id=GetObject"
+      />
+      <meta property="og:type" content="article" />
+      <meta
+        property="og:url"
+        content={`https://deploy-preview-2--hungvuongg71.netlify.app/`}
+      />
+    </>
+  )
+}
+
 export default IndexPage
-
-// export const Head: HeadFC = ({ serverData }) => {
-//   const { title, tagId, postId, imageUrl, categoryId } =
-//     serverData as ServerData
-
-//   return (
-//     <>
-//       <title>{title || 'Home Page'}</title>
-//       <meta property="og:title" content={title} />
-//       <meta property="og:description" content={title} />
-//       <meta property="og:image" content={imageUrl} />
-//       <meta property="og:type" content="article" />
-//       <meta
-//         property="og:url"
-//         content={`https://deploy-preview-2--hungvuongg71.netlify.app/?postId=${postId}&tagId=${tagId}&categoryId=${categoryId}&title=${title}&imageUrl=${imageUrl}`}
-//       />
-//     </>
-//   )
-// }
-
-// export const getServerData = (context: any) => {
-//   console.log(context)
-//   return {
-//     props: {
-//       ...context.query,
-//     },
-//   }
-// }

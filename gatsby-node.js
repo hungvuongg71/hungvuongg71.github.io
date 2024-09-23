@@ -6,27 +6,24 @@ exports.createPages = async ({ actions }) => {
 
   let notionPosts = []
   const categories = await getCategories()
-  // categories.forEach(async (category) => {
-  //   let categoryTags = await getCategoryTags(category.id)
 
-  // })
+  for (let i = 0; i < categories.length; i++) {
+    const category = categories[i]
+    const categoryTags = await getCategoryTags(category.id)
+    for (let j = 0; j < categoryTags.length; j++) {
+      const categoryTag = categoryTags[i]
+      const posts = await getPosts(
+        categoryTag.databaseId,
+        categoryTag.name,
+        categoryTag.id,
+        category.id
+      )
 
-  const selectedCategory = categories.find(
-    (category) => category.id === '5cacdbff-b9e2-4973-b565-ec1ae4327ec9'
-  )
+      if (posts.length) notionPosts.push(...posts)
+    }
+  }
 
-  const categoryTags = await getCategoryTags(selectedCategory.id)
-  const selectCategoryTag = categoryTags.find(
-    (tag) => tag.id === '843ac5bc-2826-43e2-a5ea-ff89ae43d888'
-  )
-  const posts = await getPosts(
-    selectCategoryTag.databaseId,
-    selectCategoryTag.name,
-    selectCategoryTag.id,
-    selectedCategory.id
-  )
-
-  posts.forEach((post) => {
+  notionPosts.forEach((post) => {
     createPage({
       path: `/post/${post.id}`,
       component: path.resolve(`./src/templates/post-template.tsx`),
