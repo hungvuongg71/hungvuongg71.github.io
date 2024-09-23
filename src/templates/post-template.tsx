@@ -1,5 +1,5 @@
-import { HeadFC, PageProps } from 'gatsby'
-import React from 'react'
+import { HeadFC, navigate, PageProps } from 'gatsby'
+import React, { useEffect } from 'react'
 import { Post } from '../services/uxcomic-service'
 import { json } from 'stream/consumers'
 
@@ -16,9 +16,19 @@ interface PageContext {
 const PostTemplate: React.FC<React.PropsWithChildren<IPostProps>> = ({
   pageContext,
 }) => {
+  const { title, tagId, id, cover, categoryId } = pageContext as PageContext
+
+  useEffect(() => {
+    setTimeout(redirectToPostDetail, 2000)
+  }, [])
+
+  const redirectToPostDetail = () => {
+    navigate(`/?postId=${id}&tagId=${tagId}&categoryId=${categoryId}`)
+  }
+
   return (
     <div>
-      <h1>{JSON.stringify(pageContext)}</h1>
+      <h1>Loading...</h1>
     </div>
   )
 }
@@ -35,7 +45,7 @@ export const Head: HeadFC = ({ pageContext }) => {
       <meta property="og:type" content="article" />
       <meta
         property="og:url"
-        content={`https://deploy-preview-2--hungvuongg71.netlify.app/post/${id}`}
+        content={`${process.env.GATSBY_WEB_ROOT_URL}/post/${id}`}
       />
     </>
   )

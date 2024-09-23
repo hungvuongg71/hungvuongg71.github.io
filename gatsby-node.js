@@ -11,7 +11,7 @@ exports.createPages = async ({ actions }) => {
     const category = categories[i]
     const categoryTags = await getCategoryTags(category.id)
     for (let j = 0; j < categoryTags.length; j++) {
-      const categoryTag = categoryTags[i]
+      const categoryTag = categoryTags[j]
       const posts = await getPosts(
         categoryTag.databaseId,
         categoryTag.name,
@@ -22,6 +22,8 @@ exports.createPages = async ({ actions }) => {
       if (posts.length) notionPosts.push(...posts)
     }
   }
+
+  console.log('notionPosts', JSON.stringify(notionPosts))
 
   notionPosts.forEach((post) => {
     createPage({
@@ -49,7 +51,6 @@ const getCategories = async () => {
           (block) => block.type == 'child_database'
         )
       ] || null
-
     const categoriesResponse = await notion.databases.query({
       database_id: database.id,
       sorts: [
@@ -72,6 +73,7 @@ const getCategories = async () => {
   } catch (error) {
     console.error('Notion API Error:', error.message)
     console.log('Context info:', JSON.stringify(context))
+
     return []
   }
 }
@@ -110,10 +112,12 @@ const getCategoryTags = async (blockId) => {
         (item, index, self) =>
           index === self?.findIndex((t) => t.name === item.name)
       )
+
     return categoryTags
   } catch (error) {
     console.error('Notion API Error:', error.message)
     console.log('Context info:', JSON.stringify(context))
+
     return []
   }
 }
@@ -121,16 +125,17 @@ const getCategoryTags = async (blockId) => {
 const getPosts = async (databaseId, tagName, tagId, categoryId) => {
   try {
     if (!databaseId || !tagName) return []
+
     const queryResponse = await notion.databases.query({
       database_id: databaseId,
       filter: {
         and: [
-          {
-            property: 'Publish',
-            checkbox: {
-              equals: true,
-            },
-          },
+          // {
+          //   property: 'Publish',
+          //   checkbox: {
+          //     equals: true,
+          //   },
+          // },
           {
             property: 'Tag',
             select: {
@@ -149,14 +154,17 @@ const getPosts = async (databaseId, tagName, tagId, categoryId) => {
     const posts = queryResponse.results.map((item) => ({
       id: item.id,
       title: item.properties?.Name?.title[0]?.plain_text,
+      publish: item.properties?.Publish?.checkbox,
       cover: item.cover?.file?.url,
       tagId,
       categoryId,
     }))
+
     return posts
   } catch (error) {
     console.error('Notion API Error:', error.message)
     console.log('Context info:', JSON.stringify(context))
+
     return []
   }
 }

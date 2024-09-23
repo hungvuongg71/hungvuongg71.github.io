@@ -110,9 +110,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     UxComicService.getPosts(databaseId, name)
       .then(async (data) => {
         data.forEach((item) => {
-          // item.cover = item?.cover || process.env.DEFAULT_THUMBNAIL || ''
-          item.cover =
-            'https://searchengineland.com/wp-content/seloads/2016/01/smx-london-home-skyline-1200x630.png'
+          item.cover = item?.cover || process.env.GATSBY_DEFAULT_THUMBNAIL || ''
           item.tagId = tag.id
           item.categoryId = selectedCategory?.id || ''
         })
