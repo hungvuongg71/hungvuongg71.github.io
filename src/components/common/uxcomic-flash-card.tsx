@@ -130,6 +130,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
           width: width,
           height: height,
           top: top.to((value) => (value === '-1' ? 'auto' : `${value}px`)),
+          zIndex: open ? 9999 : 'auto',
         }}
       >
         <animated.div
@@ -155,7 +156,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
             <h1 className="font-bold text-center">{title}</h1>
           </animated.div>
           <animated.div className="flex-grow" style={{ ...contentStyles }}>
-            <UxComicButton id={id} onClick={handleShareLink}>
+            <UxComicButton key={id} id={id} onClick={handleShareLink}>
               Share
             </UxComicButton>
             {children}

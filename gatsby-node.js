@@ -93,13 +93,16 @@ exports.createPages = async ({ graphql, actions }) => {
         id: post.id,
         title: post.title,
         cover: post.cover,
-        tagId: post.tagId,
-        categoryId: post.categoryId,
+        tagId: post.tag.id,
+        categoryId: post.category.id,
       },
     })
   })
 }
 
+/**
+ * PRIVATE FUNCTIONS
+ */
 const getCategories = async () => {
   try {
     const rootBlockChildren = await notion.blocks.children.list({

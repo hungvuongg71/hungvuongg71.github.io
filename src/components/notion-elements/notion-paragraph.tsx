@@ -1,5 +1,5 @@
 import React from 'react'
-import { Content } from '../../services/uxcomic-service'
+import { Content } from '../../uxcomic-types'
 
 interface INotionParagraphProps {
   content: Content
@@ -8,7 +8,7 @@ interface INotionParagraphProps {
 const NotionParagraph: React.FC<
   React.PropsWithChildren<INotionParagraphProps>
 > = ({ content, children }) => {
-  return <p>{content.data}</p>
+  return <p key={content.id}>{content.data}</p>
 }
 
 export default NotionParagraph

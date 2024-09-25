@@ -10,6 +10,7 @@ import { selectPostsByTagAndCategory } from '../redux/slices/post-slice'
 import { PostContent } from '../uxcomic-types'
 import { UxComicService } from '../services/uxcomic-service'
 import PostSection from '../components/posts-section'
+import { useLocation } from '@reach/router'
 
 interface IIndexPageProps extends PageProps {}
 
@@ -19,6 +20,11 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
    */
   const [postContent, setPostContent] = useState<PostContent[]>([])
   const [loadingContents, setLoadingContents] = useState<boolean>(false)
+
+  /**
+   * OTHER HOOKS
+   */
+  const location = useLocation()
 
   /**
    * REDUX HOOKS
@@ -74,6 +80,22 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     }
     fetchContent()
   }, [posts])
+
+  useEffect(() => {
+    if (!location) return
+    const params = new URLSearchParams(location.search)
+    const postId = params.get('postId')
+    const tagId = params.get('tagId')
+    const categoryId = params.get('categoryId')
+    if (!postId || !tagId || !categoryId) return
+    console.log(postId, tagId, categoryId)
+    dispatch(
+      setSelectedCategory(
+        categories.find((category) => category.id === categoryId)
+      )
+    )
+    dispatch(setSelectedTag(tags.find((tag) => tag.id === tagId)))
+  }, [location, dispatch, categories, tags])
 
   /**
    * HANDLERS
