@@ -2,7 +2,7 @@ import { useSprings } from '@react-spring/web'
 import { useState } from 'react'
 import { from, to, trans } from '../helpers/flash-card-helper'
 import { useDrag } from '@use-gesture/react'
-import { Post } from '../services/uxcomic-service'
+import { Post } from '../uxcomic-types'
 
 export const useUxComicFlashCard = (posts: Post[]) => {
   const [isDraggingAllowed, setIsDraggingAllowed] = useState<boolean>(true)

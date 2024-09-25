@@ -1,7 +1,5 @@
 import { HeadFC, navigate, PageProps } from 'gatsby'
 import React, { useEffect } from 'react'
-import { Post } from '../services/uxcomic-service'
-import { json } from 'stream/consumers'
 
 interface IPostProps extends PageProps {}
 
@@ -19,7 +17,7 @@ const PostTemplate: React.FC<React.PropsWithChildren<IPostProps>> = ({
   const { title, tagId, id, cover, categoryId } = pageContext as PageContext
 
   useEffect(() => {
-    setTimeout(redirectToPostDetail, 2000)
+    setTimeout(redirectToPostDetail, 1000)
   }, [])
 
   const redirectToPostDetail = () => {

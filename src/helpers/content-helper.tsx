@@ -1,10 +1,10 @@
 import React, { JSX } from 'react'
-import { Content } from '../services/uxcomic-service'
 import {
   NotionBulletedListItem,
   NotionImage,
   NotionParagraph,
 } from '../components/notion-elements'
+import { Content } from '../uxcomic-types'
 
 export const renderContent = (content: Content): JSX.Element | null => {
   switch (content.type) {

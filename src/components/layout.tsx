@@ -1,20 +1,23 @@
 import * as React from 'react'
+import { CategoryManager, PostManager, TagManager } from './manager'
 
-interface ILayoutProps {
-  pageTitle: string
-}
+interface ILayoutProps {}
 
 const Layout: React.FC<React.PropsWithChildren<ILayoutProps>> = ({
-  pageTitle,
   children,
 }) => {
   return (
-    <div className="container mx-auto">
-      <main>
-        <h1 className="text-5xl font-bold">{pageTitle}</h1>
-        {children || 'No Content'}
-      </main>
-    </div>
+    <>
+      <CategoryManager />
+      <TagManager />
+      <PostManager />
+
+      <div className="container mx-auto">
+        <main className="flex flex-col h-screen">
+          {children || 'No Content'}
+        </main>
+      </div>
+    </>
   )
 }
 

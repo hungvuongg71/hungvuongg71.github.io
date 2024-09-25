@@ -1,31 +1,91 @@
 const path = require('path')
 const notion = require('./netlify/helpers/notion-sdk-helper')
 
-exports.createPages = async ({ actions }) => {
-  const { createPage } = actions
+/**
+ * GATSBY CREATE NODES
+ * @param {*} param0
+ */
+exports.sourceNodes = async ({
+  actions,
+  createNodeId,
+  createContentDigest,
+}) => {
+  const { createNode } = actions
 
   let notionPosts = []
   const categories = await getCategories()
 
   for (let i = 0; i < categories.length; i++) {
+    let tmpPost = {}
     const category = categories[i]
-    const categoryTags = await getCategoryTags(category.id)
-    for (let j = 0; j < categoryTags.length; j++) {
-      const categoryTag = categoryTags[j]
-      const posts = await getPosts(
-        categoryTag.databaseId,
-        categoryTag.name,
-        categoryTag.id,
-        category.id
-      )
-
-      if (posts.length) notionPosts.push(...posts)
+    tmpPost.category = category
+    const tags = await getTags(category.id)
+    for (let j = 0; j < tags.length; j++) {
+      const tag = tags[j]
+      tmpPost.tag = tag
+      let posts = await getPosts(tag.databaseId, tag.name, tag.id, category.id)
+      posts = posts
+        .filter((post) => !!post?.id)
+        .map((post) => ({ ...post, ...tmpPost }))
+      notionPosts.push(...posts)
     }
   }
 
+  // Node Posts
+  notionPosts.forEach((post) => {
+    // Tạo node cho mỗi bài viết
+    createNode({
+      id: createNodeId(`NotionPost-${post.id}`),
+      parent: null,
+      children: [],
+      internal: {
+        type: 'NotionPost', // Tên node
+        contentDigest: createContentDigest(post),
+      },
+      // Dữ liệu được lưu vào GraphQL
+      post,
+      // Bạn có thể lưu thêm nhiều field từ Notion tại đây
+    })
+  })
+}
+
+/**
+ * GATSBY CREATE PAGES
+ * @param {*} param0
+ */
+exports.createPages = async ({ graphql, actions }) => {
+  const { createPage } = actions
+
+  const result = await graphql(`
+    query {
+      allNotionPost {
+        nodes {
+          post {
+            id
+            title
+            publish
+            cover
+            category {
+              id
+              title
+              iconUrl
+            }
+            tag {
+              id
+              name
+              databaseId
+              categoryId
+            }
+          }
+        }
+      }
+    }
+  `)
+  if (result.errors) throw result.errors
+  let notionPosts = result.data.allNotionPost.nodes
   console.log('notionPosts', JSON.stringify(notionPosts))
 
-  notionPosts.forEach((post) => {
+  notionPosts.forEach(({ post }) => {
     createPage({
       path: `/post/${post.id}`,
       component: path.resolve(`./src/templates/post-template.tsx`),
@@ -78,7 +138,7 @@ const getCategories = async () => {
   }
 }
 
-const getCategoryTags = async (blockId) => {
+const getTags = async (blockId) => {
   try {
     if (!blockId) return []
     const blockChildren = await notion.blocks.children.list({
@@ -99,12 +159,13 @@ const getCategoryTags = async (blockId) => {
         },
       ],
     })
-    const categoryTags = queryResponse.results
+    const tags = queryResponse.results
       .map((item) => {
         return {
           id: item.properties?.Tag?.select?.id,
           name: item.properties?.Tag?.select?.name,
           databaseId: database.id,
+          categoryId: blockId,
         }
       })
       .filter((item) => item?.id !== undefined)
@@ -112,12 +173,10 @@ const getCategoryTags = async (blockId) => {
         (item, index, self) =>
           index === self?.findIndex((t) => t.name === item.name)
       )
-
-    return categoryTags
+    return tags
   } catch (error) {
     console.error('Notion API Error:', error.message)
     console.log('Context info:', JSON.stringify(context))
-
     return []
   }
 }

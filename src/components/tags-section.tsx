@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Tag } from '../services/uxcomic-service'
 import { UxComicButton } from './common'
+import { Tag } from '../uxcomic-types'
 
 interface ITagsSectionProps {
   tags: Tag[]
