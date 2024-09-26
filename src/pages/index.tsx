@@ -6,7 +6,10 @@ import { RootState } from '../redux/store'
 import { useDispatch } from 'react-redux'
 import { selectTagsByCategory, setSelectedTag } from '../redux/slices/tag-slice'
 import { setSelectedCategory } from '../redux/slices/category-slice'
-import { selectPostsByTagAndCategory } from '../redux/slices/post-slice'
+import {
+  selectPostsByTagAndCategory,
+  setSelectedPost,
+} from '../redux/slices/post-slice'
 import { PostContent } from '../uxcomic-types'
 import { UxComicService } from '../services/uxcomic-service'
 import PostSection from '../components/posts-section'
@@ -37,7 +40,9 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     selected: selectedTag,
     list: allTags,
   } = useSelector((state: RootState) => state.tag)
-  const posts = useSelector((state: RootState) => state.post.filtered)
+  const { filtered: posts, list: allPosts } = useSelector(
+    (state: RootState) => state.post
+  )
   const dispatch = useDispatch()
 
   /**
@@ -52,6 +57,37 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     )
     fetchContent(filteredTags[0].id, categories[0].id)
   }, [categories])
+
+  useEffect(() => {
+    if (!location) return
+    const params = new URLSearchParams(location.search)
+    const postId = params.get('postId')
+    const tagId = params.get('tagId')
+    const categoryId = params.get('categoryId')
+    console.log(postId, tagId, categoryId)
+    if (
+      !postId ||
+      !tagId ||
+      !categoryId ||
+      !categories.length ||
+      !allTags.length ||
+      !allPosts.length
+    )
+      return
+    const loadedCategory = categories.find(
+      (category) => category.id === categoryId
+    )
+    if (!loadedCategory) return
+    loadTags(loadedCategory.id)
+    const loadedTag = allTags.find(
+      (tag) => tag.categoryId === loadedCategory.id && tag.id === tagId
+    )
+    if (!loadedTag) return
+    fetchContent(loadedTag.id, loadedCategory.id)
+    const loadedPost = allPosts.find((post) => post.id === postId)
+    if (!loadedPost) return
+    dispatch(setSelectedPost(loadedPost))
+  }, [location, categories, allTags, allPosts])
 
   /**
    * HANDLERS

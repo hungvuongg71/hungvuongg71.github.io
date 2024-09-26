@@ -4,6 +4,10 @@ import { SpringValue } from '@react-spring/core/dist/react-spring_core.modern.js
 import { ReactDOMAttributes } from '@use-gesture/react/dist/declarations/src/types'
 import UxComicButton from './uxcomic-button'
 import { useLocation } from '@reach/router'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
+import { useDispatch } from 'react-redux'
+import { setSelectedPost } from '../../redux/slices/post-slice'
 
 interface IFlashCardProps {
   id?: string
@@ -24,8 +28,6 @@ interface IFlashCardProps {
 
 const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
   id,
-  tagId,
-  categoryId,
   i,
   x,
   y,
@@ -33,7 +35,6 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
   scale,
   imageUrl,
   title,
-
   trans,
   bind,
   onClick,
@@ -42,7 +43,9 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
 }) => {
   const [open, set] = useState(false)
   const [isRotatedCard, setIsRotatedCard] = useState<boolean>(true)
-  const location = useLocation()
+
+  const selectedPost = useSelector((state: RootState) => state.post.selected)
+  const dispatch = useDispatch()
 
   const { top, width, height } = useSpring({
     to: {
@@ -89,15 +92,23 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
     immediate: open ? false : true,
   })
 
+  // useEffect(() => {
+  //   if (!location || !isLoadedPostFromUrl || !id) return
+  //   const postId = new URLSearchParams(location.search).get('postId')
+  //   if (postId !== id) return
+  //   toggleZoom(undefined)
+  //   setIsRotatedCard(false)
+  //   setIsLoadedPostFromUrl(false)
+  // }, [location, id])
+
   useEffect(() => {
-    if (!location || !id) return
-    const postId = new URLSearchParams(location.search).get('postId')
-    if (postId !== id) return
+    if (!selectedPost || selectedPost.id !== id) return
     toggleZoom(undefined)
     setIsRotatedCard(false)
-  }, [location, id])
+  }, [selectedPost])
 
   const toggleZoom = (event: React.MouseEvent<HTMLDivElement> | undefined) => {
+    if (open) dispatch(setSelectedPost(undefined))
     set(!open)
     if (onEnableDrag) onEnableDrag(open)
     if (!isRotatedCard) setIsRotatedCard(true)

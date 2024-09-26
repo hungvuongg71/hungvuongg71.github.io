@@ -19,7 +19,7 @@ const postSlice = createSlice({
     setPosts: (state, action: PayloadAction<Post[]>) => {
       state.list = action.payload
     },
-    setSelectedPost: (state, action: PayloadAction<Post>) => {
+    setSelectedPost: (state, action: PayloadAction<Post | undefined>) => {
       state.selected = action.payload
     },
     selectPostsByTagAndCategory: (
