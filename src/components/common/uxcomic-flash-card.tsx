@@ -92,15 +92,6 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
     immediate: open ? false : true,
   })
 
-  // useEffect(() => {
-  //   if (!location || !isLoadedPostFromUrl || !id) return
-  //   const postId = new URLSearchParams(location.search).get('postId')
-  //   if (postId !== id) return
-  //   toggleZoom(undefined)
-  //   setIsRotatedCard(false)
-  //   setIsLoadedPostFromUrl(false)
-  // }, [location, id])
-
   useEffect(() => {
     if (!selectedPost || selectedPost.id !== id) return
     toggleZoom(undefined)
@@ -166,7 +157,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
             <img src={imageUrl} alt="demo" />
             <h1 className="font-bold text-center">{title}</h1>
           </animated.div>
-          <animated.div className="flex-grow" style={{ ...contentStyles }}>
+          <animated.div className="grow" style={{ ...contentStyles }}>
             <UxComicButton key={id} id={id} onClick={handleShareLink}>
               Share
             </UxComicButton>

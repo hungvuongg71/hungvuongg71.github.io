@@ -12,8 +12,11 @@ import {
 } from '../redux/slices/post-slice'
 import { PostContent } from '../uxcomic-types'
 import { UxComicService } from '../services/uxcomic-service'
-import PostSection from '../components/posts-section'
+import PostSection from '../components/post-section'
 import { useLocation } from '@reach/router'
+import CategorySection from '../components/category-section'
+import { useUxComicData } from '../hooks/use-uxcomic-data'
+import { Button } from '@headlessui/react'
 
 interface IIndexPageProps extends PageProps {}
 
@@ -21,14 +24,13 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   /**
    * STATES
    */
-  const [postContent, setPostContent] = useState<PostContent[]>([])
-  const [loadingContents, setLoadingContents] = useState<boolean>(false)
 
   /**
    * OTHER HOOKS
    */
   const location = useLocation()
-
+  const { postContent, loadingContents, loadTags, fetchContent } =
+    useUxComicData()
   /**
    * REDUX HOOKS
    */
@@ -92,10 +94,6 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   /**
    * HANDLERS
    */
-  const handleLoadTags = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.currentTarget.id === selectedCategory?.id) return
-    loadTags(event.currentTarget.id)
-  }
 
   const handleLoadPosts = (event: React.MouseEvent<HTMLButtonElement>) => {
     const tagId = event.currentTarget.id
@@ -103,71 +101,61 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     fetchContent(tagId, selectedCategory.id)
   }
 
-  const loadTags = (categoryId: string) => {
-    dispatch(
-      setSelectedCategory(
-        categories.find((category) => category.id === categoryId) || undefined
-      )
-    )
-    dispatch(selectTagsByCategory(categoryId))
-    dispatch(setSelectedTag(undefined))
-    const filteredTags = allTags.filter((tag) => tag.categoryId == categoryId)
-    fetchContent(filteredTags[0].id, categoryId)
-  }
-
-  const fetchContent = async (tagId: string, categoryId: string) => {
-    setLoadingContents(true)
-    dispatch(
-      setSelectedTag(allTags.find((tag) => tag.id === tagId) || undefined)
-    )
-    const tmp: PostContent[] = []
-    for (let i = 0; i < posts.length; i++) {
-      const post = posts[i]
-      const contents = await UxComicService.getContent(post.id)
-      tmp.push({ id: post.id, contents })
-    }
-    setPostContent(tmp)
-    dispatch(
-      selectPostsByTagAndCategory({
-        tagId,
-        categoryId,
-      })
-    )
-    setLoadingContents(false)
-  }
-
   return (
     <Layout>
-      {/** CATEGORY SECTION */}
-      <div className="flex flex-nowrap space-x-5">
-        {categories.map((category) => (
-          <div
-            key={category.id}
-            id={category.id}
-            className="flex place-items-center"
-            onClick={handleLoadTags}
-          >
-            <img src={category.iconUrl} alt={category.title} className="w-11" />
-            <h1>{category.title}</h1>
-          </div>
-        ))}
-      </div>
+      <div className="px-6 py-2">
+        {/** CATEGORY SECTION */}
+        <div className="flex flex-nowrap items-center">
+          <CategorySection />
+          {/* */}
+        </div>
 
-      {/** TAG SECTION */}
-      <div className="flex flex-nowrap space-x-5">
-        {tags.map((tag) => (
-          <button key={tag.id} id={tag.id} onClick={handleLoadPosts}>
-            {tag.name}
-          </button>
-        ))}
+        {/** TAG SECTION */}
+        <div className="flex flex-nowrap space-x-2 mt-3 overflow-x-auto">
+          {tags.map((tag) => (
+            <>
+              {tag.id === selectedTag?.id && (
+                <Button
+                  key={tag.id}
+                  id={tag.id}
+                  onClick={handleLoadPosts}
+                  className="inline-flex items-center justify-center h-9 border border-solid border-black rounded-[8px] py-2 px-3"
+                >
+                  {tag.name}
+                </Button>
+              )}
+              {tag.id !== selectedTag?.id && (
+                <Button
+                  key={tag.id}
+                  id={tag.id}
+                  onClick={handleLoadPosts}
+                  className="inline-flex items-center justify-center h-9 border border-solid border-black rounded-[8px] py-2 px-3 opacity-20"
+                >
+                  {tag.name}
+                </Button>
+              )}
+            </>
+          ))}
+        </div>
       </div>
 
       {/** POST SECTION */}
-      <div className="flex flex-grow items-center justify-center">
+      <div className="flex grow items-center justify-center">
         {!loadingContents && (
           <PostSection posts={posts} postContent={postContent} />
         )}
         {loadingContents && <p>Loading...</p>}
+      </div>
+
+      <div className="h-11">
+        <p className="font-uxcomic-manrope-regular text-center text-uxcomic-footer">
+          <span className="text-uxcomic-text-tertiary">Built with</span>
+          <span> ❤️ </span>
+          <span className="text-uxcomic-text-tertiary"> by </span>
+          <b className="text-uxcomic-text-tertiary underline underline-offset-1">
+            UXcomic
+          </b>
+        </p>
       </div>
     </Layout>
   )

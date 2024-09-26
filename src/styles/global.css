@@ -4,35 +4,35 @@
 
 @font-face {
   font-family: 'Calistoga';
-  src: url('/src/fonts/Calistoga/Calistoga-Regular.ttf') format('ttf');
+  src: url('/src/fonts/Calistoga/Calistoga-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Oi';
-  src: url('/src/fonts/Oi/Oi-Regular.ttf') format('ttf');
+  src: url('/src/fonts/Oi/Oi-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Manropee-Bold';
-  src: url('/src/fonts/Manrope/static/Manrope-Bold.ttf') format('ttf');
-  font-weight: 700;
+  src: url('/src/fonts/Manrope/static/Manrope-Bold.ttf') format('truetype');
+  font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Manropee-SemiBold';
-  src: url('/src/fonts/Manrope/static/Manrope-SemiBold.ttf') format('ttf');
+  src: url('/src/fonts/Manrope/static/Manrope-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Manropee-Regular';
-  src: url('/src/fonts/Manrope/static/Manrope-Regular.ttf') format('ttf');
+  src: url('/src/fonts/Manrope/static/Manrope-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
@@ -42,7 +42,7 @@
 }
 
 .title-1 {
-  @apply font-uxcomic-manrope-bold text-uxcomic-display-1;
+  @apply font-uxcomic-manrope-bold text-uxcomic-display-1 font-bold;
 }
 
 .title-2 {

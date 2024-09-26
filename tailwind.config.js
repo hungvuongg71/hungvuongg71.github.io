@@ -23,6 +23,7 @@ module.exports = {
       },
       fontSize: {
         'uxcomic-display-1': ['22px', { lineHeight: '32px' }],
+        'uxcomic-footer': ['13px', { lineHeight: '20px' }],
         'uxcomic-card-title-small': ['11px', { lineHeight: '22px' }],
         'uxcomic-overline': ['11px', { lineHeight: '12px' }],
       },
