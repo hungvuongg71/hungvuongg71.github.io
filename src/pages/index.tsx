@@ -32,9 +32,11 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   const { list: categories, selected: selectedCategory } = useSelector(
     (state: RootState) => state.category
   )
-  const { filtered: tags, selected: selectedTag } = useSelector(
-    (state: RootState) => state.tag
-  )
+  const {
+    filtered: tags,
+    selected: selectedTag,
+    list: allTags,
+  } = useSelector((state: RootState) => state.tag)
   const posts = useSelector((state: RootState) => state.post.filtered)
   const dispatch = useDispatch()
 
@@ -42,82 +44,60 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
    * USEEFFECTS
    */
   useEffect(() => {
-    if (categories.length && !selectedCategory)
-      dispatch(setSelectedCategory(categories[0]))
-  }, [categories, selectedCategory, dispatch])
-
-  useEffect(() => {
-    if (!selectedCategory) return
-    dispatch(selectTagsByCategory(selectedCategory.id))
-  }, [selectedCategory])
-
-  useEffect(() => {
-    if (tags.length && !selectedTag) dispatch(setSelectedTag(tags[0]))
-  }, [tags, selectedTag, dispatch])
-
-  useEffect(() => {
-    if (!selectedTag || !selectedCategory) return
-    dispatch(
-      selectPostsByTagAndCategory({
-        tagId: selectedTag.id,
-        categoryId: selectedCategory.id,
-      })
+    if (!categories.length) return
+    dispatch(setSelectedCategory(categories[0]))
+    dispatch(selectTagsByCategory(categories[0].id))
+    const filteredTags = allTags.filter(
+      (tag) => tag.categoryId == categories[0].id
     )
-  }, [selectedTag, selectedCategory])
-
-  useEffect(() => {
-    if (!posts.length) return
-    setLoadingContents(true)
-    const fetchContent = async () => {
-      const tmp: PostContent[] = []
-      for (let i = 0; i < posts.length; i++) {
-        const post = posts[i]
-        const contents = await UxComicService.getContent(post.id)
-        tmp.push({ id: post.id, contents })
-      }
-      setPostContent(tmp)
-      setLoadingContents(false)
-    }
-    fetchContent()
-  }, [posts])
-
-  useEffect(() => {
-    if (!location) return
-    const params = new URLSearchParams(location.search)
-    const postId = params.get('postId')
-    const tagId = params.get('tagId')
-    const categoryId = params.get('categoryId')
-    if (!postId || !tagId || !categoryId) return
-    console.log(postId, tagId, categoryId)
-    dispatch(
-      setSelectedCategory(
-        categories.find((category) => category.id === categoryId)
-      )
-    )
-    dispatch(setSelectedTag(tags.find((tag) => tag.id === tagId)))
-  }, [location, dispatch, categories, tags])
+    fetchContent(filteredTags[0].id, categories[0].id)
+  }, [categories])
 
   /**
    * HANDLERS
    */
   const handleLoadTags = (event: React.MouseEvent<HTMLDivElement>) => {
-    dispatch(
-      setSelectedCategory(
-        categories.find((category) => category.id === event.currentTarget.id) ||
-          undefined
-      )
-    )
-    dispatch(selectTagsByCategory(event.currentTarget.id))
-    dispatch(setSelectedTag(undefined))
+    if (event.currentTarget.id === selectedCategory?.id) return
+    loadTags(event.currentTarget.id)
   }
 
   const handleLoadPosts = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!selectedCategory) return
+    const tagId = event.currentTarget.id
+    if (!selectedCategory || tagId == selectedTag?.id) return
+    fetchContent(tagId, selectedCategory.id)
+  }
+
+  const loadTags = (categoryId: string) => {
     dispatch(
-      setSelectedTag(
-        tags.find((tag) => tag.id === event.currentTarget.id) || undefined
+      setSelectedCategory(
+        categories.find((category) => category.id === categoryId) || undefined
       )
     )
+    dispatch(selectTagsByCategory(categoryId))
+    dispatch(setSelectedTag(undefined))
+    const filteredTags = allTags.filter((tag) => tag.categoryId == categoryId)
+    fetchContent(filteredTags[0].id, categoryId)
+  }
+
+  const fetchContent = async (tagId: string, categoryId: string) => {
+    setLoadingContents(true)
+    dispatch(
+      setSelectedTag(allTags.find((tag) => tag.id === tagId) || undefined)
+    )
+    const tmp: PostContent[] = []
+    for (let i = 0; i < posts.length; i++) {
+      const post = posts[i]
+      const contents = await UxComicService.getContent(post.id)
+      tmp.push({ id: post.id, contents })
+    }
+    setPostContent(tmp)
+    dispatch(
+      selectPostsByTagAndCategory({
+        tagId,
+        categoryId,
+      })
+    )
+    setLoadingContents(false)
   }
 
   return (
@@ -158,7 +138,6 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
 }
 
 export const Head: HeadFC = ({ location, params, data, pageContext }) => {
-  console.log(location, params, data, pageContext)
   return (
     <>
       <title>UXComic</title>

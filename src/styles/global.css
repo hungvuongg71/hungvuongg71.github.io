@@ -2,6 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Calistoga';
+  src: url('/src/fonts/Calistoga/Calistoga-Regular.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Oi';
+  src: url('/src/fonts/Oi/Oi-Regular.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Manropee-Bold';
+  src: url('/src/fonts/Manrope/static/Manrope-Bold.ttf') format('ttf');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Manropee-SemiBold';
+  src: url('/src/fonts/Manrope/static/Manrope-SemiBold.ttf') format('ttf');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Manropee-Regular';
+  src: url('/src/fonts/Manrope/static/Manrope-Regular.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+.display-1 {
+  @apply font-uxcomic-oi text-uxcomic-display-1;
+}
+
+.title-1 {
+  @apply font-uxcomic-manrope-bold text-uxcomic-display-1;
+}
+
+.title-2 {
+  @apply font-uxcomic-manrope-bold text-lg;
+}
+
+.card-title-medium {
+  @apply font-uxcomic-calistoga text-base;
+}
+
+.card-title-small {
+  @apply font-uxcomic-calistoga text-uxcomic-card-title-small;
+}
+
+.body-xl {
+  @apply font-uxcomic-manrope-regular text-lg;
+}
+
+.body-lg {
+  @apply font-uxcomic-manrope-regular text-base;
+}
+
+.body-md {
+  @apply font-uxcomic-manrope-regular text-sm;
+}
+
+.overline {
+  @apply font-uxcomic-manrope-bold text-uxcomic-overline uppercase;
+}
+
 .deck {
   position: absolute;
   width: 500px;
