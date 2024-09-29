@@ -17,9 +17,7 @@ module.exports = {
       fontFamily: {
         'uxcomic-calistoga': ['Calistoga', 'serif'],
         'uxcomic-oi': ['Oi', 'serif'],
-        'uxcomic-manrope-bold': ['Manrope-Bold', 'sans-serif'],
-        'uxcomic-manrope-semibold': ['Manrope-SemiBold', 'sans-serif'],
-        'uxcomic-manrope-regular': ['Manrope-Regular', 'sans-serif'],
+        'uxcomic-inter': ['Inter', 'sans-serif'],
       },
       fontSize: {
         'uxcomic-display-1': ['22px', { lineHeight: '32px' }],

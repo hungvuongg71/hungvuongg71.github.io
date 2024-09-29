@@ -12,9 +12,9 @@ interface IPostSectionProps {
 const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
   posts,
   postContent,
-  children,
 }) => {
   const { props, bind, trans, enableDrag } = useUxComicFlashCard(posts)
+
   return (
     <>
       {props.map(({ x, y, rot, scale }, i) => (

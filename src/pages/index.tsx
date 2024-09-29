@@ -4,19 +4,15 @@ import Layout from '../components/layout'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { useDispatch } from 'react-redux'
-import { selectTagsByCategory, setSelectedTag } from '../redux/slices/tag-slice'
+import { selectTagsByCategory } from '../redux/slices/tag-slice'
 import { setSelectedCategory } from '../redux/slices/category-slice'
-import {
-  selectPostsByTagAndCategory,
-  setSelectedPost,
-} from '../redux/slices/post-slice'
-import { PostContent } from '../uxcomic-types'
-import { UxComicService } from '../services/uxcomic-service'
+import { setSelectedPost } from '../redux/slices/post-slice'
 import PostSection from '../components/post-section'
 import { useLocation } from '@reach/router'
 import CategorySection from '../components/category-section'
 import { useUxComicData } from '../hooks/use-uxcomic-data'
 import { Button } from '@headlessui/react'
+import { ArrowUturnLeftIcon, Squares2X2Icon } from '@heroicons/react/24/outline'
 
 interface IIndexPageProps extends PageProps {}
 
@@ -66,7 +62,6 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
     const postId = params.get('postId')
     const tagId = params.get('tagId')
     const categoryId = params.get('categoryId')
-    console.log(postId, tagId, categoryId)
     if (
       !postId ||
       !tagId ||
@@ -113,40 +108,42 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
         {/** TAG SECTION */}
         <div className="flex flex-nowrap space-x-2 mt-3 overflow-x-auto">
           {tags.map((tag) => (
-            <>
-              {tag.id === selectedTag?.id && (
-                <Button
-                  key={tag.id}
-                  id={tag.id}
-                  onClick={handleLoadPosts}
-                  className="inline-flex items-center justify-center h-9 border border-solid border-black rounded-[8px] py-2 px-3"
-                >
-                  {tag.name}
-                </Button>
-              )}
-              {tag.id !== selectedTag?.id && (
-                <Button
-                  key={tag.id}
-                  id={tag.id}
-                  onClick={handleLoadPosts}
-                  className="inline-flex items-center justify-center h-9 border border-solid border-black rounded-[8px] py-2 px-3 opacity-20"
-                >
-                  {tag.name}
-                </Button>
-              )}
-            </>
+            <Button
+              key={tag.id} // Dùng tag.id làm key duy nhất
+              id={tag.id}
+              onClick={handleLoadPosts}
+              className={`inline-flex items-center justify-center h-9 border border-solid border-black rounded-[8px] py-2 px-3 ${
+                tag.id === selectedTag?.id ? '' : 'opacity-20'
+              }`}
+            >
+              {tag.name}
+            </Button>
           ))}
         </div>
       </div>
 
-      {/** POST SECTION */}
-      <div className="flex grow items-center justify-center">
-        {!loadingContents && (
-          <PostSection posts={posts} postContent={postContent} />
+      <div className="grow overflow-hidden">
+        {/** POST SECTION */}
+        <div className="flex h-[27rem] items-center justify-center">
+          {!loadingContents && (
+            <PostSection posts={posts} postContent={postContent} />
+          )}
+          {loadingContents && <p>Loading...</p>}
+        </div>
+
+        {posts.length > 0 && (
+          <div className="flex justify-center space-x-10 py-3">
+            <Button className="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-75 rounded-full border-2 border-solid border-white">
+              <ArrowUturnLeftIcon className="w-6 h-6" />
+            </Button>
+            <Button className="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-75 rounded-full border-2 border-solid border-white">
+              <Squares2X2Icon className="w-6 h-6" />
+            </Button>
+          </div>
         )}
-        {loadingContents && <p>Loading...</p>}
       </div>
 
+      {/** FOOTER SECTION */}
       <div className="h-11">
         <p className="font-uxcomic-manrope-regular text-center text-uxcomic-footer">
           <span className="text-uxcomic-text-tertiary">Built with</span>

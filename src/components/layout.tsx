@@ -12,7 +12,7 @@ const Layout: React.FC<React.PropsWithChildren<ILayoutProps>> = ({
       <TagManager />
       <PostManager />
 
-      <div className="container mx-auto h-screen w-screen bg-uxcomic-bg">
+      <div className="container mx-auto h-dvh w-screen bg-uxcomic-bg">
         <main className="flex flex-col h-screen">
           {children || 'No Content'}
         </main>

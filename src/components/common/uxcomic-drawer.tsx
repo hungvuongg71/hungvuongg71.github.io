@@ -23,7 +23,7 @@ const UxComicDrawer: React.FC<React.PropsWithChildren<IUxComicDrawerProps>> = ({
           <div className="pointer-events-none fixed top-0 flex max-w-full">
             <DialogPanel
               transition
-              className="pointer-events-auto relative w-screen max-w-md transform transition duration-500 ease-in-out data-[closed]:-translate-y-48 sm:duration-700"
+              className="pointer-events-auto relative w-screen max-w-md transform transition duration-500 ease-in-out data-[closed]:-translate-y-96 sm:duration-700"
             >
               <div className="flex h-full flex-col overflow-y-scroll bg-uxcomic-bg shadow-xl rounded-b-[24px]">
                 <div className="relative flex-1 pl-6 pr-4 pb-3">{children}</div>

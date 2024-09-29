@@ -2,12 +2,12 @@ import { animated, to as interpolate, useSpring } from '@react-spring/web'
 import React, { useEffect, useState } from 'react'
 import { SpringValue } from '@react-spring/core/dist/react-spring_core.modern.js'
 import { ReactDOMAttributes } from '@use-gesture/react/dist/declarations/src/types'
-import UxComicButton from './uxcomic-button'
-import { useLocation } from '@reach/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { useDispatch } from 'react-redux'
 import { setSelectedPost } from '../../redux/slices/post-slice'
+import { ChevronLeftIcon } from '@heroicons/react/24/outline'
+import { Button } from '@headlessui/react'
 
 interface IFlashCardProps {
   id?: string
@@ -47,31 +47,40 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
   const selectedPost = useSelector((state: RootState) => state.post.selected)
   const dispatch = useDispatch()
 
-  const { top, width, height } = useSpring({
+  const deckSpring = useSpring({
     to: {
-      width: open ? `${window.innerWidth}px` : '250px',
-      height: open ? `${window.innerHeight}px` : '385px',
-      top: open ? '0' : `${window?.innerHeight / 4}`,
+      width: open ? `${window.innerWidth}px` : '296px',
+      minHeight: open ? undefined : '376px',
+      top: open ? 0 : 128,
+      padding: open ? '8px' : '0',
     },
   })
 
-  const cardStyles = useSpring({
+  const cardSpring = useSpring({
     to: {
-      width: open ? `${window.innerWidth}px` : '250px',
-      height: open ? `${window.innerHeight}px` : '385px',
-      maxWidth: open ? '100%' : undefined,
-      maxHeight: open ? '100%' : undefined,
+      width: open ? `100px` : '296px',
+      height: open ? `150px` : '376px',
+      top: open ? '0' : `${128}`,
+      padding: open ? '4px' : '8px',
     },
   })
 
-  const imageStyles = useSpring({
+  const imageSpring = useSpring({
     to: {
-      width: open ? `200px` : '250px',
+      width: open ? '90px' : '280px',
+      height: open ? '90px' : '280px',
       marginTop: open ? '20px' : '0px',
       marginBottom: open ? '20px' : '0px',
       marginLeft: 'auto',
       marginRight: 'auto',
-      fontSize: open ? '20px' : '16px',
+    },
+  })
+
+  const titleSpring = useSpring({
+    to: {
+      fontSize: open ? '6px' : '16px',
+      paddingTop: open ? '5px' : '28px',
+      paddingBottom: open ? '5px' : '28px',
     },
   })
 
@@ -81,9 +90,10 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
       x: 0,
       opacity: open ? 1 : 0,
       padding: '12px',
-      width: `${window.innerWidth}px`,
-      height: open ? '100%' : '0px',
+      width: `100%`,
+      height: open ? '100%' : '0',
       overflow: open ? 'visible' : 'hidden',
+      touchAction: 'pan-y',
     },
     config: {
       duration: 280,
@@ -98,7 +108,12 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
     setIsRotatedCard(false)
   }, [selectedPost])
 
-  const toggleZoom = (event: React.MouseEvent<HTMLDivElement> | undefined) => {
+  const toggleZoom = (
+    event:
+      | React.MouseEvent<HTMLDivElement>
+      | React.MouseEvent<HTMLButtonElement>
+      | undefined
+  ) => {
     if (open) dispatch(setSelectedPost(undefined))
     set(!open)
     if (onEnableDrag) onEnableDrag(open)
@@ -124,45 +139,68 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
   return (
     <>
       <animated.div
-        className="deck"
+        className={`deck ${open ? 'bg-uxcomic-bg' : 'flex flex-col'}`}
         key={i}
         style={{
           x,
           y,
-          width: width,
-          height: height,
-          top: top.to((value) => (value === '-1' ? 'auto' : `${value}px`)),
+          width: deckSpring.width,
+          height: 'auto',
+          minHeight: deckSpring.minHeight,
+          padding: deckSpring.padding,
+          top: deckSpring.top.to((value) =>
+            value === -1 ? 'auto' : `${value}px`
+          ),
           zIndex: open ? 9999 : 'auto',
         }}
       >
+        <Button
+          className="absolute top-4 left-4 w-12 h-12 bg-white bg-opacity-75 rounded-full border-2 border-solid border-white flex justify-center items-center"
+          onClick={toggleZoom}
+        >
+          <ChevronLeftIcon className="w-6 h-6" />
+        </Button>
         <animated.div
           {...bind(i)}
-          className="flex flex-col"
+          className="flex flex-col justify-center uxcomic-card"
           style={{
+            left: '50%',
             transform: !isRotatedCard
               ? 'none'
               : interpolate([rot, scale], trans),
             touchAction: 'pan-y',
             overflowY: open ? 'auto' : 'hidden',
-            position: 'relative',
-            ...cardStyles,
+            width: cardSpring.width,
+            height: cardSpring.height,
+            padding: cardSpring.padding,
+            margin: '0 auto',
           }}
           onClick={toggleZoom}
         >
-          <animated.div
-            style={{
-              ...imageStyles,
-            }}
-          >
-            <img src={imageUrl} alt="demo" />
-            <h1 className="font-bold text-center">{title}</h1>
-          </animated.div>
-          <animated.div className="grow" style={{ ...contentStyles }}>
-            <UxComicButton key={id} id={id} onClick={handleShareLink}>
-              Share
-            </UxComicButton>
-            {children}
-          </animated.div>
+          <div className="flex flex-col h-full border border-solid border-uxcomic-divider overflow-hidden rounded-lg">
+            <animated.div
+              className="grow bg-cover bg-center rounded-t-lg"
+              style={{
+                width: imageSpring.width,
+                height: imageSpring.height,
+                backgroundImage: `url(${imageUrl})`,
+              }}
+            ></animated.div>
+            <animated.div
+              style={{
+                fontSize: titleSpring.fontSize,
+                paddingTop: titleSpring.paddingTop,
+                paddingBottom: titleSpring.paddingBottom,
+              }}
+              className="flex py-7 items-center justify-center border-t card-title-medium text-center"
+            >
+              {title}
+            </animated.div>
+          </div>
+        </animated.div>
+        <animated.div style={{ ...contentStyles }}>
+          <h1 className="notion-h1 mt-6 mb-4 text-center">{title}</h1>
+          {children}
         </animated.div>
       </animated.div>
     </>

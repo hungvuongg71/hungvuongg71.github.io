@@ -8,7 +8,11 @@ interface INotionParagraphProps {
 const NotionParagraph: React.FC<
   React.PropsWithChildren<INotionParagraphProps>
 > = ({ content, children }) => {
-  return <p key={content.id}>{content.data}</p>
+  return (
+    <p key={content.id} className="notion-p">
+      {content.data}
+    </p>
+  )
 }
 
 export default NotionParagraph

@@ -2,51 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Calistoga';
-  src: url('/src/fonts/Calistoga/Calistoga-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Oi';
-  src: url('/src/fonts/Oi/Oi-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Manropee-Bold';
-  src: url('/src/fonts/Manrope/static/Manrope-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Manropee-SemiBold';
-  src: url('/src/fonts/Manrope/static/Manrope-SemiBold.ttf') format('truetype');
-  font-weight: 600;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Manropee-Regular';
-  src: url('/src/fonts/Manrope/static/Manrope-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
 .display-1 {
   @apply font-uxcomic-oi text-uxcomic-display-1;
 }
 
 .title-1 {
-  @apply font-uxcomic-manrope-bold text-uxcomic-display-1 font-bold;
+  @apply font-uxcomic-inter text-uxcomic-display-1 font-bold;
 }
 
 .title-2 {
-  @apply font-uxcomic-manrope-bold text-lg;
+  @apply font-uxcomic-inter font-bold text-lg;
 }
 
 .card-title-medium {
@@ -58,44 +23,34 @@
 }
 
 .body-xl {
-  @apply font-uxcomic-manrope-regular text-lg;
+  @apply font-uxcomic-inter text-lg;
 }
 
 .body-lg {
-  @apply font-uxcomic-manrope-regular text-base;
+  @apply font-uxcomic-inter text-base;
 }
 
 .body-md {
-  @apply font-uxcomic-manrope-regular text-sm;
+  @apply font-uxcomic-inter text-sm;
 }
 
 .overline {
-  @apply font-uxcomic-manrope-bold text-uxcomic-overline uppercase;
+  @apply font-uxcomic-inter font-bold text-uxcomic-overline uppercase;
+}
+
+/** NOTION STYLES */
+.notion-h1 {
+  @apply font-uxcomic-calistoga text-2xl;
+}
+
+.notion-p {
+  @apply font-uxcomic-inter text-base;
 }
 
 .deck {
-  position: absolute;
-  width: 500px;
-  height: 400px;
-  will-change: transform;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  touch-action: none;
+  @apply absolute w-4/5 h-4/5 will-change-transform;
 }
 
-.deck > div {
-  background-color: white;
-  background-size: auto 85%;
-  background-repeat: no-repeat;
-  background-position: center center;
-  width: 55vh;
-  max-width: 250px;
-  height: 95vh;
-  max-height: 385px;
-  will-change: transform;
-  border-radius: 10px;
-  box-shadow:
-    0 12.5px 100px -10px rgba(50, 50, 73, 0.4),
-    0 10px 10px -10px rgba(50, 50, 73, 0.3);
+.deck .uxcomic-card {
+  @apply w-full h-full bg-white bg-[length:auto_85%] bg-[center_center] bg-no-repeat will-change-transform rounded-xl shadow-[0_12.5px_100px_-10px_rgba(50,50,73,0.4),0_10px_10px_-10px_rgba(50,50,73,0.3)];
 }

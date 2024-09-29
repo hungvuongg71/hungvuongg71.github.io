@@ -11,17 +11,9 @@ export const useUxComicData = () => {
   const [postContent, setPostContent] = useState<PostContent[]>([])
   const [loadingContents, setLoadingContents] = useState<boolean>(false)
 
-  const { list: categories, selected: selectedCategory } = useSelector(
-    (state: RootState) => state.category
-  )
-  const {
-    filtered: tags,
-    selected: selectedTag,
-    list: allTags,
-  } = useSelector((state: RootState) => state.tag)
-  const { filtered: posts, list: allPosts } = useSelector(
-    (state: RootState) => state.post
-  )
+  const { list: categories } = useSelector((state: RootState) => state.category)
+  const { list: allTags } = useSelector((state: RootState) => state.tag)
+  const { list: allPosts } = useSelector((state: RootState) => state.post)
 
   const dispatch = useDispatch()
 
@@ -43,8 +35,11 @@ export const useUxComicData = () => {
       setSelectedTag(allTags.find((tag) => tag.id === tagId) || undefined)
     )
     const tmp: PostContent[] = []
-    for (let i = 0; i < posts.length; i++) {
-      const post = posts[i]
+    const tmpFilteredPosts = allPosts.filter(
+      (post) => post.tagId === tagId && post.categoryId === categoryId
+    )
+    for (let i = 0; i < tmpFilteredPosts.length; i++) {
+      const post = tmpFilteredPosts[i]
       const contents = await UxComicService.getContent(post.id)
       tmp.push({ id: post.id, contents })
     }

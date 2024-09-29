@@ -1,5 +1,5 @@
 import React from 'react'
-import { Content } from '../../services/uxcomic-service'
+import { Content } from '../../uxcomic-types'
 
 interface INotionImageProps {
   content: Content
