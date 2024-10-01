@@ -30,9 +30,11 @@ export interface Content {
     | 'heading_1'
     | 'heading_2'
     | 'heading_3'
+    | 'callout'
     | 'paragraph'
     | 'image'
     | 'bulleted_list_item'
+    | 'numbered_list_item'
     | 'callout'
     | 'divider'
   data: string | NotionCallout | undefined
@@ -50,6 +52,7 @@ export interface NotionPost {
 }
 
 export interface NotionCallout {
-  plain_text: string
+  title: string
   icon: string
+  items: Content[]
 }

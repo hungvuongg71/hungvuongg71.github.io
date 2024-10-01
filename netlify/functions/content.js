@@ -17,7 +17,7 @@ exports.handler = async function (event, context) {
     const content = getContentData(queryResponse)
     return successResponse(content)
   } catch (error) {
-    console.error('Notion API Error:', error.message)
+    console.error('Notion API Error:', JSON.stringify(error))
     console.log('Context info:', JSON.stringify(context))
     return errorResponse()
   }

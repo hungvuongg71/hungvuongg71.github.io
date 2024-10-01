@@ -40,12 +40,16 @@ const getDataValue = (block) => {
     case 'bulleted_list_item':
       data = block?.bulleted_list_item?.rich_text[0]?.plain_text
       break
+    case 'numbered_list_item':
+      data = block?.numbered_list_item?.rich_text[0]?.plain_text
+      break
     case 'divider':
       break
     case 'callout':
       data = {
         title: block?.callout?.rich_text[0]?.plain_text,
         icon: block?.callout?.icon?.emoji,
+        items: [],
       }
   }
   return data

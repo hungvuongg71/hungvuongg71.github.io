@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setSelectedCategory } from '../redux/slices/category-slice'
 import { selectTagsByCategory, setSelectedTag } from '../redux/slices/tag-slice'
 import { RootState } from '../redux/store'
-import { PostContent } from '../uxcomic-types'
+import { NotionCallout, PostContent } from '../uxcomic-types'
 import { UxComicService } from '../services/uxcomic-service'
 import { selectPostsByTagAndCategory } from '../redux/slices/post-slice'
 
@@ -41,6 +41,17 @@ export const useUxComicData = () => {
     for (let i = 0; i < tmpFilteredPosts.length; i++) {
       const post = tmpFilteredPosts[i]
       const contents = await UxComicService.getContent(post.id)
+      for (let i = 0; i < contents.length; i++) {
+        const content = contents[i]
+        if (content.type === 'callout') {
+          try {
+            ;(content.data as NotionCallout).items =
+              await UxComicService.getContent(content.id)
+          } catch {
+            ;(content.data as NotionCallout).items = []
+          }
+        }
+      }
       tmp.push({ id: post.id, contents })
     }
     setPostContent(tmp)

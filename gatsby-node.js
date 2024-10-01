@@ -134,7 +134,7 @@ const getCategories = async () => {
 
     return data
   } catch (error) {
-    console.error('Notion API Error:', error.message)
+    console.error('Notion API Error:', JSON.stringify(error))
     console.log('Context info:', JSON.stringify(context))
 
     return []
