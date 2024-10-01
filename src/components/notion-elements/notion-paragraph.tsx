@@ -9,8 +9,8 @@ const NotionParagraph: React.FC<
   React.PropsWithChildren<INotionParagraphProps>
 > = ({ content, children }) => {
   return (
-    <p key={content.id} className="notion-p">
-      {content.data}
+    <p key={content.id} className="notion-body">
+      {content.data as string}
     </p>
   )
 }

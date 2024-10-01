@@ -5,15 +5,15 @@ interface INotionH1Props {
   content: Content
 }
 
-const NotionH1: React.FC<React.PropsWithChildren<INotionH1Props>> = ({
+const NotionH2: React.FC<React.PropsWithChildren<INotionH1Props>> = ({
   content,
   children,
 }) => {
   return (
-    <h1 key={content.id} className="notion-h1">
+    <h2 key={content.id} className="notion-h2">
       {content.data as string}
-    </h1>
+    </h2>
   )
 }
 
-export default NotionH1
+export default NotionH2

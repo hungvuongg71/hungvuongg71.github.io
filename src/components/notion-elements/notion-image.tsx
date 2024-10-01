@@ -9,7 +9,7 @@ const NotionImage: React.FC<React.PropsWithChildren<INotionImageProps>> = ({
   content,
   children,
 }) => {
-  return <img src={content.data} alt={content.type}></img>
+  return <img src={content.data as string} alt={content.type}></img>
 }
 
 export default NotionImage

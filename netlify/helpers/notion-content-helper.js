@@ -22,6 +22,15 @@ const getContentData = (queryResponse) => {
 const getDataValue = (block) => {
   let data = null
   switch (block?.type) {
+    case 'heading_1':
+      data = block?.heading_1?.rich_text[0]?.plain_text
+      break
+    case 'heading_2':
+      data = block?.heading_2?.rich_text[0]?.plain_text
+      break
+    case 'heading_3':
+      data = block?.heading_3?.rich_text[0]?.plain_text
+      break
     case 'paragraph':
       data = block?.paragraph?.rich_text[0]?.plain_text
       break
@@ -31,8 +40,13 @@ const getDataValue = (block) => {
     case 'bulleted_list_item':
       data = block?.bulleted_list_item?.rich_text[0]?.plain_text
       break
+    case 'divider':
+      break
     case 'callout':
-      data = block?.callout?.rich_text[0]?.plain_text
+      data = {
+        title: block?.callout?.rich_text[0]?.plain_text,
+        icon: block?.callout?.icon?.emoji,
+      }
   }
   return data
 }

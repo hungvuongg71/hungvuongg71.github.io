@@ -26,8 +26,16 @@ export interface PostContent {
 
 export interface Content {
   id: string
-  type: 'paragraph' | 'image' | 'bulleted_list_item'
-  data: string
+  type:
+    | 'heading_1'
+    | 'heading_2'
+    | 'heading_3'
+    | 'paragraph'
+    | 'image'
+    | 'bulleted_list_item'
+    | 'callout'
+    | 'divider'
+  data: string | NotionCallout | undefined
 }
 
 export interface NotionPost {
@@ -39,4 +47,9 @@ export interface NotionPost {
     category: Category
     tag: Tag
   }
+}
+
+export interface NotionCallout {
+  plain_text: string
+  icon: string
 }

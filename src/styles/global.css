@@ -40,13 +40,26 @@
 
 /** NOTION STYLES */
 .notion-h1 {
-  @apply font-uxcomic-calistoga text-2xl;
+  @apply font-uxcomic-calistoga text-uxcomic-notion-h1;
 }
 
-.notion-p {
-  @apply font-uxcomic-inter text-base;
+.notion-h2 {
+  @apply font-uxcomic-inter font-bold text-uxcomic-notion-h2;
 }
 
+.notion-h3 {
+  @apply font-uxcomic-inter font-bold text-lg;
+}
+
+.notion-body {
+  @apply font-uxcomic-inter text-uxcomic-notion-body mb-4;
+}
+
+.notion-divider {
+  @apply w-full h-[1px] bg-uxcomic-divider my-4;
+}
+
+/** FLASH CARD STYLES */
 .deck {
   @apply absolute w-4/5 h-4/5 will-change-transform;
 }

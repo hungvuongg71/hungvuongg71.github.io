@@ -1,5 +1,4 @@
 import React from 'react'
-import { ChevronRightIcon } from '@heroicons/react/24/outline'
 import { Content } from '../../uxcomic-types'
 
 interface INotionBulletedListItemProps {
@@ -10,9 +9,9 @@ const NotionBulletedListItem: React.FC<
   React.PropsWithChildren<INotionBulletedListItemProps>
 > = ({ content, children }) => {
   return (
-    <p key={content.id} id={content.id} className="flex">
-      <ChevronRightIcon className="text-blue-500 basis-1" />
-      <span className="flex-1">{content.data}</span>
+    <p key={content.id} id={content.id} className="flex flex-initial mb-1">
+      <span className="inline-block flex-shrink-0 w-[0.4rem] h-[0.4rem] bg-black rounded-full mt-[0.6rem]"></span>
+      <span className="block ml-3">{content.data as string}</span>
     </p>
   )
 }
