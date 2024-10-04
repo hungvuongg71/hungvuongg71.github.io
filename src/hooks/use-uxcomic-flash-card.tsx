@@ -7,6 +7,7 @@ import { Post } from '../uxcomic-types'
 export const useUxComicFlashCard = (posts: Post[]) => {
   const [isDraggingAllowed, setIsDraggingAllowed] = useState<boolean>(true)
   const [gone] = useState(() => new Set()) // The set flags all the cards that are flicked out
+
   // Create a bunch of springs using the helpers above
   const [props, api] = useSprings(posts.length, (i) => ({
     ...to(i),
@@ -15,7 +16,7 @@ export const useUxComicFlashCard = (posts: Post[]) => {
   const bind = useDrag(
     ({ args: [index], down, movement: [mx], direction: [xDir], velocity }) => {
       if (!isDraggingAllowed) return
-      const trigger = velocity[0] > 0.2 // If you flick hard enough it should trigger the card to fly out
+      const trigger = velocity[0] > 0.3 // If you flick hard enough it should trigger the card to fly out
       const dir = xDir < 0 ? -1 : 1 // Direction should either point left or right
       if (!down && trigger) gone.add(index) // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
       api.start((i) => {
@@ -40,6 +41,26 @@ export const useUxComicFlashCard = (posts: Post[]) => {
     }
   )
 
+  const undoFlashCard = () => {
+    setTimeout(() => {
+      // Lấy phần tử cuối cùng đã flick out
+      const lastGone = Array.from(gone).pop()
+
+      if (lastGone !== undefined) {
+        gone.delete(lastGone) // Xóa card cuối cùng ra khỏi tập gone
+        api.start((i) => {
+          if (i !== lastGone) return // Chỉ cập nhật card mà chúng ta đang redo
+          return {
+            x: 0, // Đặt lại vị trí x về 0 (giữa màn hình)
+            rot: 0, // Đặt lại độ xoay
+            scale: 1, // Đặt lại tỷ lệ
+            config: { friction: 50, tension: 500 }, // Cấu hình lại animation
+          }
+        })
+      }
+    }, 600)
+  }
+
   const enableDrag = (isEnabled: boolean = true) =>
     setIsDraggingAllowed(isEnabled)
 
@@ -48,5 +69,6 @@ export const useUxComicFlashCard = (posts: Post[]) => {
     bind,
     trans,
     enableDrag,
+    undoFlashCard,
   }
 }

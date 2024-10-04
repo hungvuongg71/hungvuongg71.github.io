@@ -131,7 +131,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
           {loadingContents && <p>Loading...</p>}
         </div>
 
-        {posts.length > 0 && (
+        {/* {posts.length > 0 && (
           <div className="flex justify-center space-x-10 py-3">
             <Button className="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-75 rounded-full border-2 border-solid border-white">
               <ArrowUturnLeftIcon className="w-6 h-6" />
@@ -140,7 +140,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
               <Squares2X2Icon className="w-6 h-6" />
             </Button>
           </div>
-        )}
+        )} */}
       </div>
 
       {/** FOOTER SECTION */}

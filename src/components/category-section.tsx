@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import UxComicDrawer from './common/uxcomic-drawer'
 import { useUxComicData } from '../hooks/use-uxcomic-data'
 import { Button } from '@headlessui/react'
 import { XMarkIcon, CheckIcon } from '@heroicons/react/24/solid'
+import { UxComicDrawer } from './common'
 
 interface ICategorySectionProps {}
 
@@ -39,7 +39,10 @@ const CategorySection: React.FC<
         <>
           <div className="flex items-center justify-between h-16">
             <h1 className="title-1">Danh mục</h1>
-            <Button className="flex items-center justify-center bg-white rounded-full w-12 h-12">
+            <Button
+              className="flex items-center justify-center bg-white rounded-full w-12 h-12"
+              onClick={() => setOpen(false)}
+            >
               <XMarkIcon className="w-6 h-6" />
             </Button>
           </div>

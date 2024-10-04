@@ -6,7 +6,16 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { useDispatch } from 'react-redux'
 import { setSelectedPost } from '../../redux/slices/post-slice'
-import { ChevronLeftIcon } from '@heroicons/react/24/outline'
+import {
+  ChevronLeftIcon,
+  HandThumbUpIcon,
+  HandThumbDownIcon,
+  ArrowUpOnSquareIcon,
+} from '@heroicons/react/24/outline'
+import {
+  HandThumbDownIcon as HandThumbDownSolidIcon,
+  HandThumbUpIcon as HandThumbUpSolidIcon,
+} from '@heroicons/react/24/solid'
 import { Button } from '@headlessui/react'
 
 interface IFlashCardProps {
@@ -43,6 +52,8 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
 }) => {
   const [open, set] = useState(false)
   const [isRotatedCard, setIsRotatedCard] = useState<boolean>(true)
+  const [liked, setLiked] = useState<boolean>(false)
+  const [unliked, setUnliked] = useState<boolean>(false)
 
   const selectedPost = useSelector((state: RootState) => state.post.selected)
   const dispatch = useDispatch()
@@ -52,7 +63,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
       width: open ? `${window.innerWidth}px` : '296px',
       minHeight: open ? undefined : '376px',
       top: open ? 0 : 128,
-      padding: open ? '8px' : '0',
+      padding: open ? '4px' : '0',
     },
   })
 
@@ -104,24 +115,18 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
 
   useEffect(() => {
     if (!selectedPost || selectedPost.id !== id) return
-    toggleZoom(undefined)
+    toggleZoom()
     setIsRotatedCard(false)
   }, [selectedPost])
 
-  const toggleZoom = (
-    event:
-      | React.MouseEvent<HTMLDivElement>
-      | React.MouseEvent<HTMLButtonElement>
-      | undefined
-  ) => {
+  const toggleZoom = () => {
     if (open) dispatch(setSelectedPost(undefined))
     set(!open)
     if (onEnableDrag) onEnableDrag(open)
     if (!isRotatedCard) setIsRotatedCard(true)
   }
 
-  const handleShareLink = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation()
+  const handleShareLink = () => {
     if (navigator.share) {
       navigator
         .share({
@@ -201,6 +206,36 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
         <animated.div style={{ ...contentStyles }}>
           <h1 className="notion-h1 mt-6 mb-4 text-center">{title}</h1>
           {children}
+          <div className="flex justify-between items-center w-60 h-12 mx-auto mt-6 px-7 rounded-full border-2 border-solid border-white bg-white backdrop-blur-lg bg-opacity-75 utility-sticky bottom-6">
+            {!liked && (
+              <HandThumbUpIcon
+                className="w-6 h-6"
+                onClick={() => setLiked(true)}
+              />
+            )}
+            {liked && (
+              <HandThumbUpSolidIcon
+                className="w-6 h-6"
+                onClick={() => setLiked(false)}
+              />
+            )}
+            <ArrowUpOnSquareIcon
+              className="w-6 h-6 active:opacity-50"
+              onClick={handleShareLink}
+            />
+            {!unliked && (
+              <HandThumbDownIcon
+                className="w-6 h-6"
+                onClick={() => setUnliked(true)}
+              />
+            )}
+            {unliked && (
+              <HandThumbDownSolidIcon
+                className="w-6 h-6"
+                onClick={() => setUnliked(false)}
+              />
+            )}
+          </div>
         </animated.div>
       </animated.div>
     </>

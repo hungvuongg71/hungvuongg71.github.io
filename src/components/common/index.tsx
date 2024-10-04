@@ -1,6 +1,6 @@
-import UxComicCard from './uxcomic-card'
 import UxComicDialog from './uxcomic-dialog'
 import UxComicButton from './uxcomic-button'
 import UxComicFlashCard from './uxcomic-flash-card'
+import UxComicDrawer from './uxcomic-drawer'
 
-export { UxComicCard, UxComicDialog, UxComicButton, UxComicFlashCard }
+export { UxComicDialog, UxComicButton, UxComicFlashCard, UxComicDrawer }

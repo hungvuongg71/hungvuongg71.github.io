@@ -19,7 +19,7 @@ const PostManager: React.FC = () => {
               ({ post }): Post => ({
                 id: post.id,
                 title: post.title,
-                cover: post.cover || process.env.GATSBY_THUMBNAIL_DEFAULT || '',
+                cover: process.env.GATSBY_THUMBNAIL_DEFAULT || '',
                 tagId: post.tag.id,
                 categoryId: post.category.id,
               })

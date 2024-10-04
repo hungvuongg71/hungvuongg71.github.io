@@ -67,3 +67,9 @@
 .deck .uxcomic-card {
   @apply w-full h-full bg-white bg-[length:auto_85%] bg-[center_center] bg-no-repeat will-change-transform rounded-xl shadow-[0_12.5px_100px_-10px_rgba(50,50,73,0.4),0_10px_10px_-10px_rgba(50,50,73,0.3)];
 }
+
+/** UTILITIES */
+.utility-sticky {
+  @apply sticky;
+  position: -webkit-sticky;
+}
