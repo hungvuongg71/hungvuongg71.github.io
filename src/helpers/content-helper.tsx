@@ -10,7 +10,7 @@ import {
   NotionNumberedListItem,
   NotionParagraph,
 } from '../components/notion-elements'
-import { Content } from '../uxcomic-types'
+import { Content, Post, PostContent } from '../uxcomic-types'
 
 let tmpNumbered = 1
 
@@ -50,4 +50,13 @@ export const renderContent = (content: Content): JSX.Element | null => {
       return <NotionDivider key={content.id} content={content}></NotionDivider>
   }
   return null
+}
+
+export const getCoverPost = (
+  post: Post,
+  postContent: PostContent[]
+): Content | undefined => {
+  let content = postContent.find((cnt) => cnt.id === post.id)?.contents
+  let firstImg = content?.find((cnt) => cnt.type === 'image')
+  return firstImg
 }

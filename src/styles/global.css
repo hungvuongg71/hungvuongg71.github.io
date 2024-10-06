@@ -61,7 +61,7 @@
 
 /** GRID MODE STYLES */
 .uxcomic-grid-bg::before {
-  @apply w-full h-16 fixed bottom-0 z-[-1] bg-gradient-to-t from-uxcomic-bg from-25% to-transparent;
+  @apply w-full h-40 fixed bottom-0 z-[-1] bg-gradient-to-t from-uxcomic-bg from-25% to-transparent;
   content: '';
 }
 
@@ -71,11 +71,11 @@
 }
 
 .deck .uxcomic-card {
-  @apply w-full h-full bg-white bg-[length:auto_85%] bg-[center_center] bg-no-repeat will-change-transform rounded-xl shadow-[0_12.5px_100px_-10px_rgba(50,50,73,0.4),0_10px_10px_-10px_rgba(50,50,73,0.3)];
+  @apply w-full h-full bg-white bg-[length:auto_85%] bg-[center_center] bg-no-repeat will-change-transform rounded-xl shadow-[0px_2px_6px_2px_rgba(0,0,0,0.15),0px_1px_2px_0px_rgba(50,50,73,0.3)];
 }
 
 /** UTILITIES */
 .utility-sticky {
-  @apply sticky;
   position: -webkit-sticky;
+  @apply sticky;
 }

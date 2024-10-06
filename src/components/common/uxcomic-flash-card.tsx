@@ -7,7 +7,7 @@ import { RootState } from '../../redux/store'
 import { useDispatch } from 'react-redux'
 import { setSelectedPost } from '../../redux/slices/post-slice'
 import {
-  ChevronLeftIcon,
+  XMarkIcon,
   HandThumbUpIcon,
   HandThumbDownIcon,
   ArrowUpOnSquareIcon,
@@ -160,10 +160,10 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
         }}
       >
         <Button
-          className="absolute top-4 left-4 w-12 h-12 bg-white bg-opacity-75 rounded-full border-2 border-solid border-white flex justify-center items-center"
+          className="absolute top-4 right-4 w-12 h-12 bg-white bg-opacity-75 rounded-full border-2 border-solid border-white flex justify-center items-center"
           onClick={toggleZoom}
         >
-          <ChevronLeftIcon className="w-6 h-6" />
+          <XMarkIcon className="w-6 h-6" />
         </Button>
         <animated.div
           {...bind(i)}
@@ -197,7 +197,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
                 paddingTop: titleSpring.paddingTop,
                 paddingBottom: titleSpring.paddingBottom,
               }}
-              className="flex flex-col py-7 items-center justify-center border-t card-title-medium text-center relative"
+              className="flex flex-col py-7 px-4 items-center justify-center border-t card-title-medium text-center relative"
             >
               <div
                 className={`border border-solid border-x-uxcomic-divider rounded-full px-2 absolute top-[-14px] bg-white ${open ? 'scale-50' : ''}`}

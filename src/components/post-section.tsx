@@ -1,7 +1,7 @@
 import React, { useState, JSX, useEffect } from 'react'
-import { UxComicDialog, UxComicFlashCard } from './common'
+import { UxComicCard, UxComicDialog, UxComicFlashCard } from './common'
 import { useUxComicFlashCard } from '../hooks'
-import { renderContent } from '../helpers/content-helper'
+import { getCoverPost, renderContent } from '../helpers/content-helper'
 import { Content, Post, PostContent } from '../uxcomic-types'
 import { Button } from '@headlessui/react'
 import {
@@ -22,27 +22,11 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
   posts,
   postContent,
 }) => {
-  const [openDialog, setOpenDialog] = useState<boolean>(false)
-  const [selectedPost, setSelectedPost] = useState<Post>()
-
   const isGrid = useSelector((state: RootState) => state.listMode.isGrid)
   const dispatch = useDispatch()
 
   const { props, bind, trans, enableDrag, undoFlashCard } =
     useUxComicFlashCard(posts)
-
-  // Get cover post
-  const getCoverPost = (post: Post): Content | undefined => {
-    let content = postContent.find((cnt) => cnt.id === post.id)?.contents
-    let firstImg = content?.find((cnt) => cnt.type === 'image')
-    return firstImg
-  }
-
-  const handleLoadContent = (event: React.MouseEvent<HTMLDivElement>) => {
-    const postId = event.currentTarget.id
-    setSelectedPost(posts.find((post) => post.id === postId))
-    setOpenDialog(true)
-  }
 
   return (
     <>
@@ -60,7 +44,8 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
               rot={rot}
               scale={scale}
               imageUrl={
-                (getCoverPost(posts[i])?.data as string) || posts[i].cover
+                (getCoverPost(posts[i], postContent)?.data as string) ||
+                posts[i].cover
               }
               title={posts[i].title}
               bind={bind}
@@ -70,7 +55,7 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
               {postContent
                 .find((item) => item.id === posts[i].id)
                 ?.contents.filter(
-                  (cnt) => getCoverPost(posts[i])?.id !== cnt.id
+                  (cnt) => getCoverPost(posts[i], postContent)?.id !== cnt.id
                 )
                 .map((content) => renderContent(content))}
             </UxComicFlashCard>
@@ -79,45 +64,7 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
       )}
 
       {isGrid && (
-        <>
-          <div className="grid grid-cols-2 grid-flow-row auto-rows-max gap-2 w-full h-full px-6 pb-16">
-            {posts.map((post) => (
-              <div
-                key={post.id}
-                id={post.id}
-                className="flex flex-col p-2 bg-white rounded-md shadow-[0px_2px_8px_rgba(0,0,0,0.1)]"
-                onClick={handleLoadContent}
-              >
-                <div className="border border-solid border-uxcomic-divider rounded-sm">
-                  <div
-                    className="grow bg-cover bg-center h-40"
-                    style={{
-                      backgroundImage: `url(${(getCoverPost(post)?.data as string) || post.cover})`,
-                    }}
-                  ></div>
-                  <h1 className="card-title-medium text-center border-t-[1px] pt-4 pb-2 px-2">
-                    {post.title}
-                  </h1>
-                </div>
-              </div>
-            ))}
-          </div>
-          <UxComicDialog open={openDialog} setOpen={setOpenDialog}>
-            {selectedPost && (
-              <>
-                <h1 className="notion-h1 mt-6 mb-4 text-center">
-                  {selectedPost.title}
-                </h1>
-                {postContent
-                  .find((item) => item.id === selectedPost?.id)
-                  ?.contents.filter(
-                    (cnt) => getCoverPost(selectedPost)?.id !== cnt.id
-                  )
-                  .map((content) => renderContent(content))}
-              </>
-            )}
-          </UxComicDialog>
-        </>
+        <UxComicCard posts={posts} postContent={postContent}></UxComicCard>
       )}
 
       {posts.length > 0 && (

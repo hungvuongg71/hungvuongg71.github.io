@@ -100,7 +100,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
 
   return (
     <Layout>
-      <div className="px-6 py-2">
+      <div className="pl-6 py-2">
         {/** CATEGORY SECTION */}
         <div className="flex flex-nowrap items-center">
           <CategorySection />
