@@ -27,6 +27,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   const location = useLocation()
   const { postContent, loadingContents, loadTags, fetchContent } =
     useUxComicData()
+
   /**
    * REDUX HOOKS
    */
@@ -41,6 +42,7 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
   const { filtered: posts, list: allPosts } = useSelector(
     (state: RootState) => state.post
   )
+  const isGrid = useSelector((state: RootState) => state.listMode.isGrid)
   const dispatch = useDispatch()
 
   /**
@@ -122,38 +124,33 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
         </div>
       </div>
 
-      <div className="grow overflow-hidden">
+      <div
+        className={`grow ${!isGrid ? 'overflow-hidden' : 'overflow-y-scroll'}`}
+      >
         {/** POST SECTION */}
-        <div className="flex h-[27rem] items-center justify-center">
+        <div
+          className={`flex ${!isGrid && 'h-[27rem]'} items-center justify-center`}
+        >
           {!loadingContents && (
             <PostSection posts={posts} postContent={postContent} />
           )}
           {loadingContents && <p>Loading...</p>}
         </div>
-
-        {/* {posts.length > 0 && (
-          <div className="flex justify-center space-x-10 py-3">
-            <Button className="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-75 rounded-full border-2 border-solid border-white">
-              <ArrowUturnLeftIcon className="w-6 h-6" />
-            </Button>
-            <Button className="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-75 rounded-full border-2 border-solid border-white">
-              <Squares2X2Icon className="w-6 h-6" />
-            </Button>
-          </div>
-        )} */}
       </div>
 
       {/** FOOTER SECTION */}
-      <div className="h-11">
-        <p className="font-uxcomic-manrope-regular text-center text-uxcomic-footer">
-          <span className="text-uxcomic-text-tertiary">Built with</span>
-          <span> ❤️ </span>
-          <span className="text-uxcomic-text-tertiary"> by </span>
-          <b className="text-uxcomic-text-tertiary underline underline-offset-1">
-            UXcomic
-          </b>
-        </p>
-      </div>
+      {!isGrid && (
+        <div className="h-11">
+          <p className="font-uxcomic-manrope-regular text-center text-uxcomic-footer">
+            <span className="text-uxcomic-text-tertiary">Built with</span>
+            <span> ❤️ </span>
+            <span className="text-uxcomic-text-tertiary"> by </span>
+            <b className="text-uxcomic-text-tertiary underline underline-offset-1">
+              UXcomic
+            </b>
+          </p>
+        </div>
+      )}
     </Layout>
   )
 }

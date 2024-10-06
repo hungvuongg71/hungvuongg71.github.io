@@ -60,8 +60,8 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
 
   const deckSpring = useSpring({
     to: {
-      width: open ? `${window.innerWidth}px` : '296px',
-      minHeight: open ? undefined : '376px',
+      width: open ? `${window.innerWidth}px` : '272px',
+      minHeight: open ? undefined : '356px',
       top: open ? 0 : 128,
       padding: open ? '4px' : '0',
     },
@@ -69,8 +69,8 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
 
   const cardSpring = useSpring({
     to: {
-      width: open ? `100px` : '296px',
-      height: open ? `150px` : '376px',
+      width: open ? `136px` : '272px',
+      height: open ? `178px` : '356px',
       top: open ? '0' : `${128}`,
       padding: open ? '4px' : '8px',
     },
@@ -78,8 +78,8 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
 
   const imageSpring = useSpring({
     to: {
-      width: open ? '90px' : '280px',
-      height: open ? '90px' : '280px',
+      width: open ? '137.55px' : '280px',
+      height: open ? '144.09px' : '280px',
       marginTop: open ? '20px' : '0px',
       marginBottom: open ? '20px' : '0px',
       marginLeft: 'auto',
@@ -197,8 +197,15 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
                 paddingTop: titleSpring.paddingTop,
                 paddingBottom: titleSpring.paddingBottom,
               }}
-              className="flex py-7 items-center justify-center border-t card-title-medium text-center"
+              className="flex flex-col py-7 items-center justify-center border-t card-title-medium text-center relative"
             >
+              <div
+                className={`border border-solid border-x-uxcomic-divider rounded-full px-2 absolute top-[-14px] bg-white ${open ? 'scale-50' : ''}`}
+              >
+                <span className="inline-block w-6 h-6">⚓</span>
+                <span className="inline-block w-6 h-6">⚓</span>
+                <span className="inline-block w-6 h-6">⚓</span>
+              </div>
               {title}
             </animated.div>
           </div>

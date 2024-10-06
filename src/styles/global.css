@@ -59,6 +59,12 @@
   @apply w-full h-[1px] bg-uxcomic-divider my-4;
 }
 
+/** GRID MODE STYLES */
+.uxcomic-grid-bg::before {
+  @apply w-full h-16 fixed bottom-0 z-[-1] bg-gradient-to-t from-uxcomic-bg from-25% to-transparent;
+  content: '';
+}
+
 /** FLASH CARD STYLES */
 .deck {
   @apply absolute w-4/5 h-4/5 will-change-transform;
