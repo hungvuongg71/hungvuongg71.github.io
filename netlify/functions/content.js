@@ -1,11 +1,11 @@
 require('dotenv').config()
-const notion = require('../helpers/notion-sdk-helper')
+const notion = require('../../utilities/notion-sdk-helper')
 const {
   successResponse,
   errorResponse,
   badRequestResponse,
-} = require('../helpers/response-helper')
-const { getContentData } = require('../helpers/notion-content-helper')
+} = require('../../utilities/response-helper')
+const { getContentData } = require('../../utilities/notion-content-helper')
 
 exports.handler = async function (event, context) {
   try {

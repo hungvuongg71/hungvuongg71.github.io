@@ -22,6 +22,7 @@ const PostManager: React.FC = () => {
                 cover: process.env.GATSBY_THUMBNAIL_DEFAULT || '',
                 tagId: post.tag.id,
                 categoryId: post.category.id,
+                content: post.content,
               })
             )
         )

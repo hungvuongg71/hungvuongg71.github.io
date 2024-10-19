@@ -31,10 +31,17 @@ const postSlice = createSlice({
         (post) => post.tagId === tagId && post.categoryId === categoryId
       )
     },
+    clearFilteredPosts: (state) => {
+      state.filtered = []
+    },
   },
 })
 
-export const { setPosts, setSelectedPost, selectPostsByTagAndCategory } =
-  postSlice.actions
+export const {
+  setPosts,
+  setSelectedPost,
+  selectPostsByTagAndCategory,
+  clearFilteredPosts,
+} = postSlice.actions
 
 export default postSlice.reducer

@@ -11,7 +11,7 @@ const NotionImage: React.FC<React.PropsWithChildren<INotionImageProps>> = ({
 }) => {
   return (
     <img
-      src={content.data as string}
+      src={content.data.value as string}
       alt={content.type}
       className="rounded-lg my-4"
     ></img>

@@ -1,7 +1,7 @@
 export interface Category {
   id: string
   title: string
-  iconUrl?: string
+  icon: string
 }
 
 export interface Tag {
@@ -17,11 +17,7 @@ export interface Post {
   cover: string
   tagId: string
   categoryId: string
-}
-
-export interface PostContent {
-  id: string
-  contents: Content[]
+  content?: Content[]
 }
 
 export interface Content {
@@ -37,10 +33,20 @@ export interface Content {
     | 'numbered_list_item'
     | 'callout'
     | 'divider'
-  data: string | NotionCallout | undefined
+  data: ContentData
 }
 
-export interface NotionPost {
+export interface ContentData {
+  value: string
+}
+
+export interface Callout {
+  title: string
+  icon: string
+  items: Content[]
+}
+
+export interface NotionPostQuery {
   post: {
     id: string
     title: string
@@ -48,11 +54,6 @@ export interface NotionPost {
     cover: string
     category: Category
     tag: Tag
+    content?: Content[]
   }
-}
-
-export interface NotionCallout {
-  title: string
-  icon: string
-  items: Content[]
 }

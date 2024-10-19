@@ -27,11 +27,14 @@ const CategorySection: React.FC<
 
   return (
     <>
-      <img
-        src={selectedCategory?.iconUrl}
+      {/* <img
+        src={selectedCategory?.icon}
         alt={selectedCategory?.title}
         className="w-8 h-8"
-      />
+      /> */}
+      <label className="flex items-center justify-center w-8 h-8 text-[22px]">
+        {selectedCategory?.icon}
+      </label>
       <h1 className="ml-2 title-1" onClick={() => setOpen(true)}>
         {selectedCategory?.title}
       </h1>
@@ -53,11 +56,10 @@ const CategorySection: React.FC<
               className="flex place-items-center h-16"
               onClick={handleLoadTags}
             >
-              <img
-                src={category.iconUrl}
-                alt={category.title}
-                className="w-11"
-              />
+              {/* <img src={category?.icon} alt={category.title} className="w-11" /> */}
+              <label className="flex items-center justify-center w-[22px] h-7 text-[22px]">
+                {category?.icon}
+              </label>
               <div className="grow ml-3">
                 <h1 className="flex items-center justify-between my-5">
                   {category.title}

@@ -11,7 +11,7 @@ const NotionH1: React.FC<React.PropsWithChildren<INotionH1Props>> = ({
 }) => {
   return (
     <h1 key={content.id} className="notion-h1">
-      {content.data as string}
+      {content.data.value as string}
     </h1>
   )
 }

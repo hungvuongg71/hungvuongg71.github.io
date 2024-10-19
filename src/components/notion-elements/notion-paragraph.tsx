@@ -10,7 +10,7 @@ const NotionParagraph: React.FC<
 > = ({ content, children }) => {
   return (
     <p key={content.id} className="notion-body">
-      {content.data as string}
+      {content.data.value as string}
     </p>
   )
 }

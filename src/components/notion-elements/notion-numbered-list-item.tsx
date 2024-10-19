@@ -12,7 +12,7 @@ const NotionNumberedListItem: React.FC<
   return (
     <p key={content.id} id={content.id} className="flex flex-initial mb-1">
       <span>{index}.</span>
-      <span className="block ml-3">{content.data as string}</span>
+      <span className="block ml-3">{content.data.value as string}</span>
     </p>
   )
 }

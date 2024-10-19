@@ -1,9 +1,9 @@
 import { graphql, useStaticQuery } from 'gatsby'
-import { NotionPost } from '../uxcomic-types'
+import { NotionPostQuery } from '../uxcomic-types'
 
 interface NotionPostsQueryData {
   allNotionPost: {
-    nodes: NotionPost[]
+    nodes: NotionPostQuery[]
   }
 }
 
@@ -20,13 +20,20 @@ export const useNotionPosts = () => {
             category {
               id
               title
-              iconUrl
+              icon
             }
             tag {
               id
               name
               databaseId
               categoryId
+            }
+            content {
+              id
+              type
+              data {
+                value
+              }
             }
           }
         }

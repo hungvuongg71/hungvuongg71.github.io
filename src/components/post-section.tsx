@@ -2,7 +2,7 @@ import React, { useState, JSX, useEffect } from 'react'
 import { UxComicCard, UxComicDialog, UxComicFlashCard } from './common'
 import { useUxComicFlashCard } from '../hooks'
 import { getCoverPost, renderContent } from '../helpers/content-helper'
-import { Content, Post, PostContent } from '../uxcomic-types'
+import { Post } from '../uxcomic-types'
 import { Button } from '@headlessui/react'
 import {
   ArrowUturnLeftIcon,
@@ -15,18 +15,25 @@ import { setIsGrid } from '../redux/slices/list-mode-slice'
 
 interface IPostSectionProps {
   posts: Post[]
-  postContent: PostContent[]
 }
 
 const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
   posts,
-  postContent,
 }) => {
+  const [openDialog, setOpenDialog] = useState<boolean>(false)
+  const [selectedPost, setSelectedPost] = useState<Post>()
+
   const isGrid = useSelector((state: RootState) => state.listMode.isGrid)
   const dispatch = useDispatch()
 
   const { props, bind, trans, enableDrag, undoFlashCard } =
     useUxComicFlashCard(posts)
+
+  const handleLoadContent = (event: React.MouseEvent<HTMLDivElement>) => {
+    const postId = event.currentTarget.id
+    setSelectedPost(posts.find((post) => post.id === postId))
+    setOpenDialog(true)
+  }
 
   return (
     <>
@@ -44,19 +51,17 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
               rot={rot}
               scale={scale}
               imageUrl={
-                (getCoverPost(posts[i], postContent)?.data as string) ||
+                (getCoverPost(posts[i])?.data?.value as string) ||
                 posts[i].cover
               }
               title={posts[i].title}
               bind={bind}
               trans={trans}
               onEnableDrag={enableDrag}
+              onClick={handleLoadContent}
             >
-              {postContent
-                .find((item) => item.id === posts[i].id)
-                ?.contents.filter(
-                  (cnt) => getCoverPost(posts[i], postContent)?.id !== cnt.id
-                )
+              {posts[i]?.content
+                ?.filter((cnt) => getCoverPost(posts[i])?.id !== cnt.id)
                 .map((content) => renderContent(content))}
             </UxComicFlashCard>
           ))}
@@ -64,7 +69,7 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
       )}
 
       {isGrid && (
-        <UxComicCard posts={posts} postContent={postContent}></UxComicCard>
+        <UxComicCard posts={posts} onClick={handleLoadContent}></UxComicCard>
       )}
 
       {posts.length > 0 && (
@@ -97,6 +102,19 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
           )}
         </div>
       )}
+
+      <UxComicDialog open={openDialog} setOpen={setOpenDialog}>
+        {selectedPost && (
+          <>
+            <h1 className="notion-h1 mt-6 mb-4 text-center">
+              {selectedPost.title}
+            </h1>
+            {selectedPost?.content
+              ?.filter((cnt) => getCoverPost(selectedPost)?.id !== cnt.id)
+              .map((content) => renderContent(content))}
+          </>
+        )}
+      </UxComicDialog>
     </>
   )
 }

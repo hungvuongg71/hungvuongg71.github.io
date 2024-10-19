@@ -1,5 +1,6 @@
 const path = require('path')
-const notion = require('./netlify/helpers/notion-sdk-helper')
+const notion = require('./utilities/notion-sdk-helper')
+const contentHelper = require('./utilities/notion-content-helper')
 
 /**
  * GATSBY CREATE NODES
@@ -10,41 +11,113 @@ exports.sourceNodes = async ({
   createNodeId,
   createContentDigest,
 }) => {
-  const { createNode } = actions
+  const { createNode, createTypes } = actions
+
+  createTypes(`
+    type NotionCategory {
+      id: String
+      title: String
+      icon: String
+    }
+
+    type NotionTag {
+      id: String
+      name: String
+      databaseId: String
+      categoryId: String
+    }
+
+    type NotionData {
+      value: String
+    }
+
+    type NotionContent {
+      id: String
+      type: String
+      data: NotionData
+    }
+
+    type NotionPostBase {
+      id: String
+      title: String
+      publish: String
+      cover: String
+      tag: NotionTag
+      category: NotionCategory
+      content: [NotionContent]
+    }
+
+    type NotionPost implements Node @dontInfer {
+      post: NotionPostBase
+    }
+  `)
 
   let notionPosts = []
-  const categories = await getCategories()
 
+  // Get Categories
+  const categories = await getCategories()
   for (let i = 0; i < categories.length; i++) {
     let tmpPost = {}
     const category = categories[i]
     tmpPost.category = category
+
+    // Get Tags
     const tags = await getTags(category.id)
     for (let j = 0; j < tags.length; j++) {
       const tag = tags[j]
       tmpPost.tag = tag
+
+      // Get Posts
       let posts = await getPosts(tag.databaseId, tag.name, tag.id, category.id)
+      for (let k = 0; k < posts.length; k++) {
+        const post = posts[k]
+        tmpPost.content = await getContent(post.id)
+        tmpPost.cover = process.env.GATSBY_THUMBNAIL_DEFAULT
+
+        if (!tmpPost.content?.length) continue
+
+        // Get CallOut Items
+        for (let u = 0; u < tmpPost.content.length; u++) {
+          let cnt = tmpPost.content[u]
+          if (cnt.type === 'callout') {
+            let tmpData = JSON.parse(cnt.data.value)
+            tmpData.items = await getContent(cnt.id)
+            cnt.data.value = JSON.stringify(tmpData)
+          }
+        }
+
+        // Set Post Cover By First Image of Content
+        const firstImg = tmpPost.content.find((cnt) => cnt.type === 'image')
+        if (firstImg) {
+          tmpPost.cover = firstImg.data.value // Get first image in content
+          tmpPost.content = tmpPost.content.filter(
+            (cnt) => cnt.id !== firstImg.id
+          ) // Remove first image because of cover post
+        }
+      }
+
       posts = posts
         .filter((post) => !!post?.id)
         .map((post) => ({ ...post, ...tmpPost }))
+
       notionPosts.push(...posts)
     }
   }
 
   // Node Posts
   notionPosts.forEach((post) => {
-    // Tạo node cho mỗi bài viết
+    // Create node each post
     createNode({
       id: createNodeId(`NotionPost-${post.id}`),
       parent: null,
       children: [],
       internal: {
-        type: 'NotionPost', // Tên node
+        type: 'NotionPost', // Node name
         contentDigest: createContentDigest(post),
       },
-      // Dữ liệu được lưu vào GraphQL
+      // Save into GraphQL
       post,
-      // Bạn có thể lưu thêm nhiều field từ Notion tại đây
+      // More properties from Notion API
     })
   })
 }
@@ -68,7 +141,7 @@ exports.createPages = async ({ graphql, actions }) => {
             category {
               id
               title
-              iconUrl
+              icon
             }
             tag {
               id
@@ -76,14 +149,22 @@ exports.createPages = async ({ graphql, actions }) => {
               databaseId
               categoryId
             }
+            content {
+              id
+              type
+              data {
+                value
+              }
+            }
           }
         }
       }
     }
   `)
+
   if (result.errors) throw result.errors
+
   let notionPosts = result.data.allNotionPost.nodes
-  console.log('notionPosts', JSON.stringify(notionPosts))
 
   notionPosts.forEach(({ post }) => {
     createPage({
@@ -129,13 +210,12 @@ const getCategories = async () => {
       .map((item) => ({
         id: item.id,
         title: item.properties?.Name?.title[0].plain_text,
-        iconUrl: item.icon?.file?.url,
+        icon: item.icon?.emoji,
       }))
 
     return data
   } catch (error) {
-    console.error('Notion API Error:', JSON.stringify(error))
-    console.log('Context info:', JSON.stringify(context))
+    console.error('[getCategories] Notion API Error:', JSON.stringify(error))
 
     return []
   }
@@ -162,6 +242,7 @@ const getTags = async (blockId) => {
         },
       ],
     })
+
     const tags = queryResponse.results
       .map((item) => {
         return {
@@ -176,10 +257,11 @@ const getTags = async (blockId) => {
         (item, index, self) =>
           index === self?.findIndex((t) => t.name === item.name)
       )
+
     return tags
   } catch (error) {
-    console.error('Notion API Error:', error.message)
-    console.log('Context info:', JSON.stringify(context))
+    console.error('[getTags] Notion API Error:', error.message)
+
     return []
   }
 }
@@ -213,19 +295,34 @@ const getPosts = async (databaseId, tagName, tagId, categoryId) => {
         },
       ],
     })
+
     const posts = queryResponse.results.map((item) => ({
       id: item.id,
       title: item.properties?.Name?.title[0]?.plain_text,
       publish: item.properties?.Publish?.checkbox,
-      cover: item.cover?.file?.url,
-      tagId,
-      categoryId,
     }))
 
     return posts
   } catch (error) {
-    console.error('Notion API Error:', error.message)
-    console.log('Context info:', JSON.stringify(context))
+    console.error('[getPosts] Notion API Error:', error.message)
+
+    return []
+  }
+}
+
+const getContent = async (blockId) => {
+  try {
+    if (!blockId) return []
+
+    const queryResponse = await notion.blocks.children.list({
+      block_id: blockId,
+    })
+
+    const content = contentHelper.getContentData(queryResponse)
+
+    return content
+  } catch (error) {
+    console.error('[getContent] Notion API Error:', JSON.stringify(error))
 
     return []
   }
