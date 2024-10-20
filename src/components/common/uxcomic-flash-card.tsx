@@ -68,6 +68,7 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
       >
         <animated.div
           {...bind(i)}
+          id={id}
           className="flex flex-col justify-center uxcomic-card p-2"
           style={{
             transform: interpolate([rot, scale], trans),

@@ -21,7 +21,7 @@ export const useUxComicData = () => {
       )
       dispatch(selectTagsByCategory(categoryId))
       dispatch(setSelectedTag(undefined))
-    }, 500)
+    }, 150)
   }
 
   return {

@@ -23,8 +23,8 @@ export const renderContent = (content: Content): JSX.Element | null => {
       return <NotionH2 key={content.id} content={content}></NotionH2>
     case 'heading_3':
       return <NotionH3 key={content.id} content={content}></NotionH3>
-    case 'callout':
-      return <NotionCallOut key={content.id} content={content}></NotionCallOut>
+    // case 'callout':
+    //   return <NotionCallOut key={content.id} content={content}></NotionCallOut>
     case 'bulleted_list_item':
       return (
         <NotionBulletedListItem

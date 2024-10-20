@@ -59,11 +59,7 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
               trans={trans}
               onEnableDrag={enableDrag}
               onClick={handleLoadContent}
-            >
-              {posts[i]?.content
-                ?.filter((cnt) => getCoverPost(posts[i])?.id !== cnt.id)
-                .map((content) => renderContent(content))}
-            </UxComicFlashCard>
+            ></UxComicFlashCard>
           ))}
         </>
       )}
@@ -92,6 +88,7 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
               </Button>
             </>
           )}
+
           {isGrid && (
             <Button
               className="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-75 rounded-full border-2 border-solid border-white"
@@ -102,9 +99,8 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
           )}
         </div>
       )}
-
-      <UxComicDialog open={openDialog} setOpen={setOpenDialog}>
-        {selectedPost && (
+      {selectedPost && (
+        <UxComicDialog open={openDialog} setOpen={setOpenDialog}>
           <>
             <h1 className="notion-h1 mt-6 mb-4 text-center">
               {selectedPost.title}
@@ -113,8 +109,8 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
               ?.filter((cnt) => getCoverPost(selectedPost)?.id !== cnt.id)
               .map((content) => renderContent(content))}
           </>
-        )}
-      </UxComicDialog>
+        </UxComicDialog>
+      )}
     </>
   )
 }

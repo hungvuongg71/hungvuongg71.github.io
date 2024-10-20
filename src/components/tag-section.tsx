@@ -48,7 +48,7 @@ const TagsSection: React.FC<
           tagId: tagId,
         })
       )
-    }, 500)
+    }, 150)
   }
 
   return (
