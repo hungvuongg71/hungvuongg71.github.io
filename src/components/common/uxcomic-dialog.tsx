@@ -25,11 +25,11 @@ const UxComicDialog: React.FC<React.PropsWithChildren<IDialogProps>> = ({
             transition
             className="flex w-full transform text-left text-base transition data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in md:my-8 md:max-w-2xl md:px-4 data-[closed]:md:translate-y-0 data-[closed]:md:scale-95 lg:max-w-4xl"
           >
-            <div className="relative flex flex-col w-full overflow-hidden px-4 pb-8 pt-14 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8 bg-uxcomic-bg">
+            <div className="relative flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden px-4 pb-20 pt-14 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8 bg-uxcomic-bg">
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="sticky right-4 top-4 flex items-center justify-center w-12 h-12 rounded-full bg-white bg-opacity-75 border-2 border-solid border-white"
+                className="fixed right-4 top-4 flex items-center justify-center w-12 h-12 rounded-full bg-white bg-opacity-75 border-2 border-solid border-white"
               >
                 <span className="sr-only">Close</span>
                 <XMarkIcon aria-hidden="true" className="h-6 w-6" />

@@ -35,24 +35,6 @@ const UxComicFlashCard: React.FC<React.PropsWithChildren<IFlashCardProps>> = ({
   onEnableDrag,
   children,
 }) => {
-  const [liked, setLiked] = useState<boolean>(false)
-  const [unliked, setUnliked] = useState<boolean>(false)
-
-  const handleShareLink = () => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: title,
-          text: title,
-          url: `${process.env.GATSBY_WEB_ROOT_URL}/post/${id}/`, // URL của bài viết
-        })
-        .then(() => console.log('Chia sẻ thành công!'))
-        .catch((error) => console.error('Lỗi khi chia sẻ:', error))
-    } else {
-      console.log('Trình duyệt không hỗ trợ Web Share API')
-    }
-  }
-
   return (
     <>
       <animated.div
