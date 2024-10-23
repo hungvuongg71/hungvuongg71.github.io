@@ -117,13 +117,9 @@ const IndexPage: React.FC<React.PropsWithChildren<IIndexPageProps>> = () => {
         </div>
       </div>
 
-      <div
-        className={`grow ${!isGrid ? 'overflow-hidden' : 'overflow-y-scroll'}`}
-      >
+      <div className="grow overflow-hidden">
         {/** POST SECTION */}
-        <div
-          className={`flex ${!isGrid && 'h-[27rem]'} items-center justify-center`}
-        >
+        <div className="flex items-center justify-center h-full flex-col">
           <PostSection posts={posts} />
         </div>
       </div>

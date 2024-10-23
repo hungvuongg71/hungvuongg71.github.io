@@ -64,7 +64,7 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
   return (
     <>
       {!isGrid && (
-        <>
+        <div className="relative flex items-center justify-center h-96">
           {props.map(({ x, y, rot, scale }, i) => (
             <UxComicFlashCard
               id={posts[i].id}
@@ -87,16 +87,24 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
               onClick={handleLoadContent}
             ></UxComicFlashCard>
           ))}
-        </>
+        </div>
       )}
 
       {isGrid && (
-        <UxComicCard posts={posts} onClick={handleLoadContent}></UxComicCard>
+        <div className="grid grid-cols-2 grid-flow-row auto-rows-max gap-2 w-full h-full px-6 pb-16 overflow-x-hidden overflow-y-scroll">
+          {posts.map((post) => (
+            <UxComicCard
+              key={post.id}
+              post={post}
+              onClick={handleLoadContent}
+            ></UxComicCard>
+          ))}
+        </div>
       )}
 
       {posts.length > 0 && (
         <div
-          className={`flex justify-center space-x-10 py-3 absolute ${!isGrid ? 'top-[524px]' : 'top-[564px] z-10 uxcomic-grid-bg'}`}
+          className={`flex justify-center space-x-10 py-3 ${!isGrid ? '' : 'absolute bottom-4 w-full z-10 uxcomic-grid-bg'}`}
         >
           {!isGrid && (
             <>
@@ -128,6 +136,16 @@ const PostSection: React.FC<React.PropsWithChildren<IPostSectionProps>> = ({
       {selectedPost && (
         <UxComicDialog open={openDialog} setOpen={setOpenDialog}>
           <>
+            <div className="flex items-center justify-center w-full">
+              <UxComicCard
+                post={selectedPost}
+                onClick={handleLoadContent}
+                style={{
+                  transform: 'rotate(4deg) scale(0.8)',
+                  width: isGrid ? '120px' : 'auto',
+                }}
+              ></UxComicCard>
+            </div>
             <h1 className="notion-h1 mt-6 mb-4 text-center">
               {selectedPost.title}
             </h1>
